@@ -1,0 +1,38 @@
+form:
+  label: string
+  listUrl: string
+  postUrl: string
+  deleteUrl: string
+  updateUrl: string
+  fields:
+    key: string
+    label: string
+    type:
+      - string
+      - number
+      default: string
+
+    validations:
+      - required:
+        value: boolean
+        errorMessage: string
+      - number:
+        min:
+          value: number
+          errorMessage: string
+        max:
+          value: number
+          errorMessage: string
+      - string:
+        minLength:
+          value: number
+          errorMessage: string
+        maxLength:
+          value: number
+          errorMessage: string
+        isEmail:
+          value: string
+          errorMessage: string
+        regexp:
+          value: string
+          errorMessage: string
