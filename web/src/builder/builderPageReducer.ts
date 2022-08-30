@@ -3,13 +3,13 @@ import { BuilderPageActions } from './builderPageActions';
 export interface BuilderPageCtx {
   inEditMode: boolean;
   isSidebarOpen: boolean;
-  isInspectorOpen: boolean;
+  inspectedElementId?: string;
   selectedElementId?: string;
 }
 
 export const initialValues: BuilderPageCtx = {
   inEditMode: true,
-  isInspectorOpen: false,
+  inspectedElementId: undefined,
   isSidebarOpen: false,
   selectedElementId: undefined,
 };
@@ -21,20 +21,20 @@ export const builderPageReducer = (
   switch (action.type) {
     case 'OPEN_SIDEBAR': {
       state.isSidebarOpen = true;
-      state.isInspectorOpen = false;
+      state.inspectedElementId = undefined;
       break;
     }
     case 'CLOSE_SIDEBAR': {
       state.isSidebarOpen = false;
       break;
     }
-    case 'OPEN_INSPECTOR': {
-      state.isInspectorOpen = true;
+    case 'SET_INSPECT_ELEMENT_ID': {
+      state.inspectedElementId = action.payload;
       state.isSidebarOpen = false;
       break;
     }
-    case 'CLOSE_INSPECTOR': {
-      state.isInspectorOpen = false;
+    case 'CLEAR_INSPECT_ELEMENT_ID': {
+      state.inspectedElementId = undefined;
       break;
     }
     case 'SET_SELECTED_ELEMENT_ID': {
@@ -51,6 +51,10 @@ export const builderPageReducer = (
     }
     case 'FORM_EDIT_MODE': {
       state.inEditMode = true;
+      break;
+    }
+    case 'TOGGLE_FORM_PREVIEW_MODE': {
+      state.inEditMode = !state.inEditMode;
       break;
     }
   }

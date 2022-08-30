@@ -1,8 +1,8 @@
-import { Box, FormHelperText, FormLabel, Input } from '@chakra-ui/react';
+import { Box, Input } from '@chakra-ui/react';
+import React from 'react';
 import { changeElementData } from '../../builderActions';
 import { useBuilderContext } from '../../BuilderContext';
-import { useBuilderPageContext } from '../../BuilderPageContext';
-import { BuilderElement, ExactBuilderElement } from '../../builderReducer';
+import { ExactBuilderElement } from '../../builderReducer';
 
 interface ShortTextProps {
   inEditMode?: boolean;
@@ -16,24 +16,33 @@ export const ShortText: React.FC<ShortTextProps> = ({
   const [, builderDispatch] = useBuilderContext();
 
   const Label = inEditMode ? (
-    <Input
-      onChange={(e) => {
-        builderDispatch(
-          changeElementData<'SHORT_TEXT'>()({
-            id: element.id,
-            data: { label: e.target.value },
-          })
-        );
-      }}
-      value={element.data.label}
-      variant='unstyled'
-      placeholder='Type a question'
-      my={2}
-      size='md'
-      fontSize={18}
-      fontWeight='medium'
-      _placeholder={{ color: 'gray.500', fontWeight: 'normal' }}
-    />
+    <Box display='flex' alignItems='center'>
+      <Input
+        onChange={(e) => {
+          builderDispatch(
+            changeElementData<'SHORT_TEXT'>()({
+              id: element.id,
+              data: { label: e.target.value },
+            })
+          );
+        }}
+        value={element.data.label}
+        variant='unstyled'
+        flexGrow={1}
+        placeholder='Type a question'
+        display='inline-block'
+        my={2}
+        size='md'
+        fontSize={18}
+        fontWeight='medium'
+        _placeholder={{ color: 'gray.500', fontWeight: 'normal' }}
+      />
+      {element.data.validations.isRequired.value && (
+        <Box as='span' color='red.500' fontSize='2xl' fontWeight='semibold'>
+          *
+        </Box>
+      )}
+    </Box>
   ) : (
     <Box
       as='label'
@@ -43,9 +52,32 @@ export const ShortText: React.FC<ShortTextProps> = ({
       my={2}
     >
       {element.data.label}
+      {element.data.validations.isRequired.value && (
+        <Box
+          as='span'
+          ml={1}
+          color='red.500'
+          fontWeight='semibold'
+          fontSize='lg'
+        >
+          *
+        </Box>
+      )}
     </Box>
   );
-  const TextInput = inEditMode ? <Input pointerEvents='none' /> : <Input />;
+  const TextInput = inEditMode ? (
+    <Input
+      pointerEvents='none'
+      placeholder={element.data.placeholder}
+      defaultValue={element.data.defaultValue}
+      tabIndex={-1}
+    />
+  ) : (
+    <Input
+      placeholder={element.data.placeholder}
+      defaultValue={element.data.defaultValue}
+    />
+  );
   const SubLabel = inEditMode ? (
     <Input
       value={element.data.subLabel}

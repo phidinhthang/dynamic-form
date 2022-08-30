@@ -7,11 +7,13 @@ import { clearDropId, getDropId } from '../../dropId';
 
 interface SidebarItemProps extends React.PropsWithChildren {
   elementType: ElementType;
+  icon?: React.ReactNode;
 }
 
 export const SidebarItem: React.FC<SidebarItemProps> = ({
   elementType,
   children,
+  icon,
 }) => {
   // const { setData } = useBuilderContext();
   const [, dispatch] = useBuilderContext();
@@ -48,13 +50,21 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
 
   return (
     <Box
-      py={2}
-      px={4}
-      border='1px dashed'
-      borderColor='blue.500'
+      h={50}
       opacity={opacity}
       ref={drag}
+      cursor='move'
+      display='flex'
+      _hover={{ bg: 'gray.100' }}
+      rounded='lg'
+      border='1px solid'
+      borderColor='blue.100'
+      p={2}
+      alignItems='center'
+      gap={4}
+      fontWeight='medium'
     >
+      <Box>{icon}</Box>
       {children}
     </Box>
   );

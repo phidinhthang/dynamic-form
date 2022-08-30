@@ -27,6 +27,7 @@ export const EditBox: React.FC<EditBoxProps> = ({
     >
       <DroppableItem
         my={1}
+        px={2}
         accept={['SHORT_TEXT']}
         id={element.id}
         renderOnActive={(isActive) =>
@@ -34,6 +35,7 @@ export const EditBox: React.FC<EditBoxProps> = ({
             <Box
               w='full'
               h={10}
+              border='1px dashed'
               display='flex'
               alignItems='center'
               justifyContent='center'

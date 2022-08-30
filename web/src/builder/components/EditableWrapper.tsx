@@ -1,9 +1,12 @@
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, SettingsIcon } from '@chakra-ui/icons';
 import { Box, IconButton } from '@chakra-ui/react';
 import React from 'react';
 import { deleteElement } from '../builderActions';
 import { useBuilderContext } from '../BuilderContext';
-import { setSelectedElementId } from '../builderPageActions';
+import {
+  setInspectElementId,
+  setSelectedElementId,
+} from '../builderPageActions';
 import { useBuilderPageContext } from '../BuilderPageContext';
 import { BuilderElement } from '../builderReducer';
 
@@ -35,19 +38,33 @@ export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
     >
       {React.cloneElement(children, { inEditMode })}
       {isEditing && (
-        <IconButton
-          icon={<DeleteIcon />}
-          aria-label='delete element'
+        <Box
           position='absolute'
           top='50%'
           transform='translateY(-50%)'
           right={-12}
-          rounded='full'
-          colorScheme='red'
-          onClick={() => {
-            builderDispatch(deleteElement(element.id));
-          }}
-        />
+          display='flex'
+          flexDir='column'
+          gap={1}
+        >
+          <IconButton
+            icon={<SettingsIcon />}
+            aria-label='element setting'
+            rounded='full'
+            onClick={() => {
+              builderPageDispatch(setInspectElementId(element.id!));
+            }}
+          />
+          <IconButton
+            icon={<DeleteIcon />}
+            aria-label='delete element'
+            rounded='full'
+            colorScheme='red'
+            onClick={() => {
+              builderDispatch(deleteElement(element.id));
+            }}
+          />
+        </Box>
       )}
     </Box>
   );

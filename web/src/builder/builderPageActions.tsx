@@ -2,9 +2,12 @@ import { createAction } from '../utils/createAction';
 
 export const openSidebar = createAction('OPEN_SIDEBAR', (action) => action);
 export const closeSidebar = createAction('CLOSE_SIDEBAR', (action) => action);
-export const openInspector = createAction('OPEN_INSPECTOR', (action) => action);
-export const closeInspector = createAction(
-  'CLOSE_INSPECTOR',
+export const setInspectElementId = createAction(
+  'SET_INSPECT_ELEMENT_ID',
+  (action) => (elementId: string) => action(elementId)
+);
+export const clearInspectElementId = createAction(
+  'CLEAR_INSPECT_ELEMENT_ID',
   (action) => action
 );
 export const setSelectedElementId = createAction(
@@ -21,12 +24,18 @@ export const formPreviewMode = createAction(
 );
 export const formEditMode = createAction('FORM_EDIT_MODE', (action) => action);
 
+export const toggleFormPreviewMode = createAction(
+  'TOGGLE_FORM_PREVIEW_MODE',
+  (action) => action
+);
+
 export type BuilderPageActions =
   | ReturnType<typeof openSidebar>
   | ReturnType<typeof closeSidebar>
-  | ReturnType<typeof openInspector>
-  | ReturnType<typeof closeInspector>
+  | ReturnType<typeof setInspectElementId>
+  | ReturnType<typeof clearInspectElementId>
   | ReturnType<typeof setSelectedElementId>
   | ReturnType<typeof clearSelectedElementId>
   | ReturnType<typeof formPreviewMode>
-  | ReturnType<typeof formEditMode>;
+  | ReturnType<typeof formEditMode>
+  | ReturnType<typeof toggleFormPreviewMode>;

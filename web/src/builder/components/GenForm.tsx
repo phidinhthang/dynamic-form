@@ -1,11 +1,14 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import React from 'react';
 import { BuilderCtx } from '../builderReducer';
 import { DroppableItem } from '../layout/mainPanel/DroppableItem';
 import { SortableItem } from '../layout/mainPanel/SortableItem';
 import { EdittableWrapper } from './EditableWrapper';
 import { EditBox } from './elements/EditBox';
-import { ShortText } from './elements/ShortText';
+import { ShortText } from './elements/ShortText/ShortText';
+import { EditShortText } from './elements/ShortText/EditShortText';
+import { FormDataProvider } from '../formData/FormDataContext';
+import { Form } from './elements/Form/Form';
 
 interface GenFormProps {
   mode?: 'preview' | 'edit';
@@ -16,7 +19,6 @@ const recursiveRenderForm = (
   { layout, elements }: BuilderCtx,
   inEditMode: boolean
 ) => {
-  console.log('in edit mode ', inEditMode);
   return (
     <>
       {layout.map((item, index): React.ReactNode => {
@@ -25,7 +27,7 @@ const recursiveRenderForm = (
           if (inEditMode) {
             return (
               <SortableItem
-                accept={['EDIT_BOX', 'SHORT_TEXT']}
+                accept={['EDIT_BOX', 'SHORT_TEXT', 'SUBMIT_BUTTON']}
                 id={element.id}
                 parentId={element.parentId}
                 type='SHORT_TEXT'
@@ -33,12 +35,12 @@ const recursiveRenderForm = (
                 key={element.id}
               >
                 <EdittableWrapper element={element}>
-                  <ShortText inEditMode={true} element={element} />
+                  <EditShortText element={element} />
                 </EdittableWrapper>
               </SortableItem>
             );
           }
-          return <ShortText inEditMode={false} element={element} />;
+          return <ShortText element={element} />;
         } else {
           const editBox = (
             <EditBox element={element} index={index}>
@@ -49,7 +51,16 @@ const recursiveRenderForm = (
             </EditBox>
           );
           return inEditMode ? (
-            <EdittableWrapper element={element}>{editBox}</EdittableWrapper>
+            <SortableItem
+              accept={['EDIT_BOX', 'SHORT_TEXT']}
+              id={element.id}
+              parentId={element.parentId}
+              type='EDIT_BOX'
+              index={index}
+              key={element.id}
+            >
+              <EdittableWrapper element={element}>{editBox}</EdittableWrapper>
+            </SortableItem>
           ) : (
             editBox
           );
@@ -73,7 +84,7 @@ export const GenForm: React.FC<GenFormProps> = ({
         id='root'
         w='full'
         h='full'
-        pb={2}
+        py={2}
         renderOnActive={(isActive) => (
           <Box
             w='full'
@@ -92,6 +103,13 @@ export const GenForm: React.FC<GenFormProps> = ({
       </DroppableItem>
     </Box>
   ) : (
-    <Box px={4}>{form}</Box>
+    <FormDataProvider value={{ elements, layout }}>
+      <Box px={4} py={4}>
+        <Form>
+          {form}
+          <Button type='submit'>Submit form</Button>
+        </Form>
+      </Box>
+    </FormDataProvider>
   );
 };

@@ -1,3 +1,4 @@
+import { DeepPartial } from '@chakra-ui/react';
 import { createAction } from '../utils/createAction';
 import {
   BuilderElement,
@@ -29,7 +30,10 @@ export const changeElementData = <T extends ElementType>() =>
   createAction(
     'CHANGE_ELEMENT_DATA',
     (action) =>
-      (params: { id: string; data: Partial<ExactBuilderElement<T>['data']> }) =>
+      (params: {
+        id: string;
+        data: DeepPartial<ExactBuilderElement<T>['data']>;
+      }) =>
         action(params)
   );
 
@@ -38,9 +42,14 @@ export const deleteElement = createAction(
   (action) => (elementId: string) => action(elementId)
 );
 
+export const undoChanges = createAction('UNDO_CHANGES', (action) => action);
+export const redoChanges = createAction('REDO_CHANGES', (action) => action);
+
 export type BuilderActions =
   | ReturnType<typeof reorderElement>
   | ReturnType<typeof moveElement>
   | ReturnType<typeof addElement>
+  | ReturnType<typeof deleteElement>
   | ReturnType<ReturnType<typeof changeElementData>>
-  | ReturnType<typeof deleteElement>;
+  | ReturnType<typeof undoChanges>
+  | ReturnType<typeof redoChanges>;
