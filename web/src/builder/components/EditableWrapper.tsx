@@ -1,14 +1,12 @@
 import { DeleteIcon, SettingsIcon } from '@chakra-ui/icons';
 import { Box, IconButton } from '@chakra-ui/react';
 import React from 'react';
-import { deleteElement } from '../builderActions';
-import { useBuilderContext } from '../BuilderContext';
-import {
-  setInspectElementId,
-  setSelectedElementId,
-} from '../builderPageActions';
-import { useBuilderPageContext } from '../BuilderPageContext';
-import { BuilderElement } from '../builderReducer';
+import { deleteElement } from '../builder/builderActions';
+import { useBuilderContext } from '../builder/BuilderContext';
+import { setInspectElementId } from '../builderPage/builderPageActions';
+import { useBuilderPageContext } from '../builderPage/BuilderPageContext';
+import { BuilderElement } from '../builder/builderReducer';
+import { useSetSelectedElement } from '../builderPage/useSetSelectedElement';
 
 interface EditableWrapperProps {
   children: React.ReactElement;
@@ -23,6 +21,7 @@ export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
     useBuilderPageContext();
   const [, builderDispatch] = useBuilderContext();
   const isEditing = selectedElementId === element.id;
+  const setSelectedElement = useSetSelectedElement();
 
   return (
     <Box
@@ -33,7 +32,7 @@ export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
       position='relative'
       onMouseDown={(e) => {
         e.stopPropagation();
-        builderPageDispatch(setSelectedElementId(element.id));
+        setSelectedElement(element.id);
       }}
     >
       {React.cloneElement(children, { inEditMode })}

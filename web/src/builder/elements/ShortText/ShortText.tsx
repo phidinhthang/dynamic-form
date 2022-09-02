@@ -1,19 +1,13 @@
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import { changeElementData } from '../../../builderActions';
-import { ExactBuilderElement } from '../../../builderReducer';
-import {
-  changeData,
-  changeValue,
-  setTouched,
-} from '../../../formData/formDataActions';
-import { useFormDataContext } from '../../../formData/FormDataContext';
+import { ExactBuilderElement } from '../../builder/builderReducer';
+import { changeValue, setTouched } from '../../formData/formDataActions';
+import { useFormDataContext } from '../../formData/FormDataContext';
 
 interface ShortTextProps {
   element: ExactBuilderElement<'SHORT_TEXT'>;
@@ -47,7 +41,7 @@ export const ShortText: React.FC<ShortTextProps> = ({ element }) => {
       py={1}
       px={2}
     >
-      <FormLabel htmlFor={element.id} fontSize={18} my={2}>
+      <FormLabel htmlFor={element.id} fontSize={18} mb={2} mt={1}>
         {element.data.label}
       </FormLabel>
       <Input

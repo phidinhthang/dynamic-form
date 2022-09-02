@@ -57,5 +57,8 @@ export const builderPageReducer = (
       state.inEditMode = !state.inEditMode;
       break;
     }
+    default: {
+      break;
+    }
   }
 };

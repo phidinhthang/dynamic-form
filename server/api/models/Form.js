@@ -4,9 +4,17 @@ module.exports = {
       type: "string",
       required: true,
     },
-    fields: {
+    layout: {
       type: "json",
-      defaultsTo: [],
+      required: true,
+    },
+    elements: {
+      type: "json",
+      required: true,
+    },
+    columns: {
+      type: "json",
+      required: true,
     },
     listUrl: {
       type: "string",

@@ -1,9 +1,10 @@
 import { DeepPartial } from '@chakra-ui/react';
-import { createAction } from '../utils/createAction';
+import { createAction } from '../../utils/createAction';
 import {
   BuilderElement,
   ElementType,
   ExactBuilderElement,
+  FieldElementType,
 } from './builderReducer';
 
 export const reorderElement = createAction(
@@ -37,6 +38,18 @@ export const changeElementData = <T extends ElementType>() =>
         action(params)
   );
 
+export const changeElementKey = createAction(
+  'CHANGE_ELEMENT_KEY',
+  (action) => (elementId: string, key: string) => action({ elementId, key })
+);
+
+export const setElementTouched = createAction(
+  'SET_ELEMENT_TOUCHED',
+  (action) =>
+    (elementId: string, isTouched: boolean = true) =>
+      action({ elementId, isTouched })
+);
+
 export const deleteElement = createAction(
   'DELETE_ELEMENT',
   (action) => (elementId: string) => action(elementId)
@@ -52,4 +65,6 @@ export type BuilderActions =
   | ReturnType<typeof deleteElement>
   | ReturnType<ReturnType<typeof changeElementData>>
   | ReturnType<typeof undoChanges>
-  | ReturnType<typeof redoChanges>;
+  | ReturnType<typeof redoChanges>
+  | ReturnType<typeof changeElementKey>
+  | ReturnType<typeof setElementTouched>;

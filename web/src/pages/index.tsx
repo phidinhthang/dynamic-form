@@ -3,8 +3,6 @@ import {
   Button,
   HStack,
   IconButton,
-  Modal,
-  ModalContent,
   Table,
   TableContainer,
   Tbody,
@@ -19,11 +17,13 @@ import React from 'react';
 import { useGetForms } from '../features/forms/useGetForms';
 import { useCreateFormsContext } from '../features/createForm/CreateFormContext';
 import { useDeleteFormContext } from '../features/deleteForm/DeleteFormContext';
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
   const [, createFormDispatch] = useCreateFormsContext();
   const [, deleteFormDispatch] = useDeleteFormContext();
   const { data, error, isLoading } = useGetForms({ refetch: true });
+  const router = useRouter();
 
   return (
     <Box>
@@ -47,7 +47,6 @@ const Home: NextPage = () => {
             <Thead>
               <Tr>
                 <Th>Label</Th>
-                <Th>Fields</Th>
                 <Th>Created At</Th>
                 <Th>Last Updated At</Th>
                 <Th>Action</Th>
@@ -57,16 +56,20 @@ const Home: NextPage = () => {
               {data.map((form, index) => (
                 <Tr key={index}>
                   <Td>{form.label}</Td>
-                  <Td>{form.fields.length} fields</Td>
                   <Td>{new Date(form.createdAt).toLocaleString()}</Td>
                   <Td>{new Date(form.updatedAt!).toLocaleString()}</Td>
                   <Td>
                     <HStack spacing={2}>
-                      <IconButton icon={<ViewIcon />} aria-label='view form' />
+                      <IconButton
+                        icon={<ViewIcon />}
+                        aria-label='view form'
+                        onClick={() => router.push(`/forms/${form.id}/table`)}
+                      />
                       <IconButton
                         colorScheme='blue'
                         icon={<EditIcon />}
                         aria-label='edit form'
+                        onClick={() => router.push(`/forms/${form.id}/edit`)}
                       />
                       <IconButton
                         colorScheme='red'

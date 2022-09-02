@@ -1,8 +1,11 @@
-import { Box, Input } from '@chakra-ui/react';
+import { Box, Input, Text } from '@chakra-ui/react';
 import React from 'react';
-import { changeElementData } from '../../../builderActions';
-import { useBuilderContext } from '../../../BuilderContext';
-import { ExactBuilderElement } from '../../../builderReducer';
+import {
+  changeElementData,
+  setElementTouched,
+} from '../../builder/builderActions';
+import { useBuilderContext } from '../../builder/BuilderContext';
+import { ExactBuilderElement } from '../../builder/builderReducer';
 
 interface EditShortTextProps {
   element: ExactBuilderElement<'SHORT_TEXT'>;
@@ -10,6 +13,9 @@ interface EditShortTextProps {
 
 export const EditShortText: React.FC<EditShortTextProps> = ({ element }) => {
   const [, builderDispatch] = useBuilderContext();
+  const setTouched = () => {
+    builderDispatch(setElementTouched(element.id));
+  };
 
   return (
     <Box py={1} px={2}>
@@ -23,6 +29,7 @@ export const EditShortText: React.FC<EditShortTextProps> = ({ element }) => {
               })
             );
           }}
+          onBlur={setTouched}
           value={element.data.label}
           variant='unstyled'
           flexGrow={1}
@@ -62,6 +69,15 @@ export const EditShortText: React.FC<EditShortTextProps> = ({ element }) => {
         fontSize='sm'
         _placeholder={{ color: 'gray.400' }}
       />
+      {element.isTouched && (
+        <Box display='flex' flexDir='column' gap={1}>
+          {element.buildErrors?.map((error) => (
+            <Text as='span' fontSize='sm' color='red.500' key={error.errorKey}>
+              {error.message}
+            </Text>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

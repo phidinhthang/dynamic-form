@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { useDrag } from 'react-dnd';
-import { useBuilderContext } from '../../BuilderContext';
-import { ElementType } from '../../builderReducer';
+import { useBuilderContext } from '../../builder/BuilderContext';
+import { ElementType } from '../../builder/builderReducer';
 import { clearDropId, getDropId } from '../../dropId';
 
 interface SidebarItemProps extends React.PropsWithChildren {
@@ -27,7 +27,6 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
     },
     end: (item, monitor) => {
       const dropId = getDropId();
-      console.log('parent id ', dropId);
       if (!monitor.didDrop()) {
         return;
       }

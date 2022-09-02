@@ -1,4 +1,4 @@
-import { createAction } from '../utils/createAction';
+import { createAction } from '../../utils/createAction';
 
 export const openSidebar = createAction('OPEN_SIDEBAR', (action) => action);
 export const closeSidebar = createAction('CLOSE_SIDEBAR', (action) => action);
@@ -6,6 +6,7 @@ export const setInspectElementId = createAction(
   'SET_INSPECT_ELEMENT_ID',
   (action) => (elementId: string) => action(elementId)
 );
+
 export const clearInspectElementId = createAction(
   'CLEAR_INSPECT_ELEMENT_ID',
   (action) => action

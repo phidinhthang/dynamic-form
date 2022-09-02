@@ -1,4 +1,4 @@
-import { BuilderCtx } from '../builderReducer';
+import { BuilderCtx } from '../builder/builderReducer';
 import { FormDataActions } from './formDataActions';
 import mixin from 'mixin-deep';
 
@@ -65,6 +65,35 @@ export const formDataReducer = (
       break;
     }
     case 'SUBMIT_FORM': {
+      Object.values(state.elements).forEach((element) => {
+        const data = state.data;
+        const field = data[element.id];
+        field.isTouched = true;
+        if (element.type === 'SHORT_TEXT') {
+          const validations = element.data.validations;
+          if (validations.isRequired.value && !field.value) {
+            field.errors.isRequired = true;
+          } else {
+            field.errors.isRequired = false;
+          }
+          if (
+            typeof validations.minLength.value === 'number' &&
+            (!field.value || field.value.length < validations.minLength.value)
+          ) {
+            field.errors.minLength = true;
+          } else {
+            field.errors.minLength = false;
+          }
+          if (
+            typeof validations.maxLength.value === 'number' &&
+            (!field.value || field.value.length > validations.maxLength.value)
+          ) {
+            field.errors.maxLength = true;
+          } else {
+            field.errors.maxLength = false;
+          }
+        }
+      });
       break;
     }
   }

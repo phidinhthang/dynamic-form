@@ -1,3 +1,11 @@
+import { BuilderElement } from '../../builder/builderReducer';
+
+export interface TableColumn {
+  id?: string;
+  label: string;
+  key: string;
+}
+
 export interface Form {
   id: string;
   label: string;
@@ -5,7 +13,9 @@ export interface Form {
   postUrl?: string;
   deleteUrl?: string;
   updateUrl?: string;
-  fields: Field[];
+  layout: string[];
+  elements: Record<string, BuilderElement>;
+  columns: TableColumn[];
   createdAt: string;
   updatedAt?: string;
 }

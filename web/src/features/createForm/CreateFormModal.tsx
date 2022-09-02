@@ -81,11 +81,13 @@ export const CreateFormModal: React.FC<CreateFormModalProps> = () => {
           deleteUrl: '',
         }}
         onSubmit={(values, { setErrors }) => {
-          createForm(values).then((error) => {
-            if ('errors' in error) {
-              setErrors(toErrorMap(error.errors));
-            }
-          });
+          createForm(values)
+            .then((error) => {
+              if ('errors' in error) {
+                setErrors(toErrorMap(error.errors));
+              }
+            })
+            .finally(closeModal);
         }}
         validationSchema={formValidationSchema}
         validateOnBlur

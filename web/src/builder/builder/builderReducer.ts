@@ -2,13 +2,25 @@ import { nanoid } from 'nanoid';
 import { BuilderActions } from './builderActions';
 import { applyPatches, enablePatches, Patch, produce } from 'immer';
 import mixin from 'mixin-deep';
+import { wrapArr } from '../../utils/wrapArr';
+import { group } from '../../utils/group';
+import { pushOne } from '../../utils/pushOne';
+import { fork } from '../../utils/fork';
+import { remove } from '../../utils/remove';
 
 enablePatches();
+
+export type ElementBuildError = {
+  errorKey: string;
+  message: string;
+};
 
 export interface BaseBuilderElement {
   id: string;
   children: string[];
   parentId: string;
+  buildErrors: ElementBuildError[];
+  isTouched: boolean;
 }
 
 export interface ShortTextElement {
@@ -46,23 +58,46 @@ export interface SubmitButtonElement {
   data: {};
 }
 
-export type ElementType = BuilderElement['type'];
+export type AllBuilderElement = {
+  SHORT_TEXT: ShortTextElement;
+  EDIT_BOX: EditBoxElement;
+  SUBMIT_BUTTON: SubmitButtonElement;
+};
+
+export type ElementType = keyof AllBuilderElement;
 
 export type ExactBuilderElement<T extends ElementType> = BaseBuilderElement &
-  {
-    SHORT_TEXT: ShortTextElement;
-    EDIT_BOX: EditBoxElement;
-    SUBMIT_BUTTON: SubmitButtonElement;
-  }[T];
+  AllBuilderElement[T];
 
-export type BuilderElement = ExactBuilderElement<
-  'SHORT_TEXT' | 'EDIT_BOX' | 'SUBMIT_BUTTON'
->;
+export type BuilderElement = ExactBuilderElement<ElementType>;
 
 export interface BuilderCtx {
   layout: string[];
   elements: Record<string, BuilderElement>;
 }
+
+type _AllFieldElement = {
+  [K in keyof AllBuilderElement]: Extract<
+    AllBuilderElement[K],
+    { data: { key: string } }
+  >;
+};
+
+export type FieldElementType = {
+  [K in keyof _AllFieldElement]: _AllFieldElement[K] extends never ? never : K;
+}[keyof _AllFieldElement];
+
+export type FieldElement = _AllFieldElement[keyof _AllFieldElement] &
+  BaseBuilderElement;
+export type ExactFieldElement<T extends FieldElementType> = _AllFieldElement[T];
+
+export const allFieldElementTypes: FieldElementType[] = ['SHORT_TEXT'];
+
+export const allBuilderElementTypes: ElementType[] = [
+  'EDIT_BOX',
+  'SHORT_TEXT',
+  'SUBMIT_BUTTON',
+];
 
 export const initialValues: BuilderCtx = {
   elements: {},
@@ -124,6 +159,8 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
             parentId,
             type,
             children: [],
+            buildErrors: [],
+            isTouched: false,
           };
           if (element.type === 'SHORT_TEXT') {
             element['data'] = {
@@ -138,6 +175,12 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
                 maxLength: { errorMessage: '' },
               },
             };
+            element['buildErrors'] = [
+              {
+                errorKey: 'emptyKey',
+                message: 'Element key is required.',
+              },
+            ];
           } else if (element.type === 'EDIT_BOX') {
             element['data'] = {};
           } else if (element.type === 'SUBMIT_BUTTON') {
@@ -153,11 +196,68 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
         }
 
         case 'CHANGE_ELEMENT_DATA': {
-          // @
           mixin(
             draftState.elements[action.payload.id].data,
             action.payload.data
           );
+          break;
+        }
+
+        case 'CHANGE_ELEMENT_KEY': {
+          const elements: Record<string, FieldElement> =
+            draftState.elements as any;
+          const element: FieldElement = elements[
+            action.payload.elementId
+          ] as any;
+          element.data.key = action.payload.key;
+          if (allFieldElementTypes.includes(element.type as any)) {
+            if (action.payload.key === '') {
+              pushOne(
+                element.buildErrors,
+                { errorKey: 'emptyKey' },
+                {
+                  errorKey: 'emptyKey',
+                  message: 'Element key is required.',
+                }
+              );
+            } else {
+              wrapArr(element.buildErrors).remove(
+                (e) => e.errorKey === 'emptyKey'
+              );
+            }
+          }
+
+          const [duplicatedKeysGroup, uniqueKeysGroup] = fork(
+            Object.values(
+              group(
+                Object.values(elements)
+                  .filter((e) => allFieldElementTypes.includes(element.type))
+                  .filter((e) => e.data.key !== ''),
+                (ele) => ele.data.key
+              )
+            ),
+            (groupedByKey) => groupedByKey.length > 1
+          );
+          duplicatedKeysGroup.forEach((groupedByKey) => {
+            groupedByKey.forEach((ele) => {
+              pushOne(
+                ele.buildErrors,
+                { errorKey: 'duplicateKey' },
+                {
+                  errorKey: 'duplicateKey',
+                  message: `Field key "${ele.data.key}" is duplicated with other field.`,
+                }
+              );
+            });
+          });
+          uniqueKeysGroup.forEach((groupedByKey) => {
+            groupedByKey.forEach((ele) => {
+              remove(
+                ele.buildErrors,
+                (item) => item.errorKey === 'duplicateKey'
+              );
+            });
+          });
           break;
         }
 
@@ -186,6 +286,12 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
           break;
         }
 
+        case 'SET_ELEMENT_TOUCHED': {
+          draftState.elements[action.payload.elementId].isTouched =
+            action.payload.isTouched;
+          break;
+        }
+
         case 'UNDO_CHANGES': {
           const undo = timeline[currentVersion]?.undo;
           if (!undo) return;
@@ -206,7 +312,7 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
         }
 
         default: {
-          break;
+          throw new Error(`Action ${action} is not handled.`);
         }
       }
     },

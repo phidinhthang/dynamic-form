@@ -8,53 +8,43 @@ import {
   ToastId,
   useToast,
 } from '@chakra-ui/react';
-import {
-  DragSourceMonitor,
-  DropTargetMonitor,
-  useDrag,
-  useDrop,
-} from 'react-dnd';
-import { XYCoord, Identifier } from 'dnd-core';
-import { nanoid } from 'nanoid';
-import autoAnimate from '@formkit/auto-animate';
-import { useBuilderContext } from './BuilderContext';
+import { useBuilderContext } from './builder/BuilderContext';
 import React from 'react';
-import produce from 'immer';
 import { SidebarItem } from './layout/sidebar/SidebarItem';
-import { DroppableItem } from './layout/mainPanel/DroppableItem';
-import { SortableItem } from './layout/mainPanel/SortableItem';
-import { ShortText } from './components/elements/ShortText';
-import { EdittableWrapper } from './components/EditableWrapper';
 import { GenForm } from './components/GenForm';
-import { useBuilderPageContext } from './BuilderPageContext';
+import { useBuilderPageContext } from './builderPage/BuilderPageContext';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Sidebar } from './layout/sidebar/Sidebar';
 import { MainPanel } from './layout/mainPanel/MainPanel';
-import { HashTagIcon } from '../icons/HashTagIcon';
 import { TextIcon } from '../icons/TextIcon';
 import { BoxIcon } from '../icons/BoxIcon';
 import { Inspector } from './layout/inspector/Inspector';
 import {
   clearInspectElementId,
   toggleFormPreviewMode,
-} from './builderPageActions';
+} from './builderPage/builderPageActions';
 import { SaveIcon } from '../icons/SaveIcon';
 import { group } from '../utils/group';
-import { BaseBuilderElement, ShortTextElement } from './builderReducer';
+import { BaseBuilderElement, ShortTextElement } from './builder/builderReducer';
 import { listify } from '../utils/listify';
 import { InfoIcon } from '@chakra-ui/icons';
 import { intersperse } from '../utils/intersperse';
-import { sleep } from '../utils/sleep';
 import { PressIcon } from '../icons/PressIcon';
+import { useRouter } from 'next/router';
+import { useGetForm } from '../features/form/useGetForm';
+import { useUpdateForm } from '../features/updateForm/useUpdateForm';
 
 export const BuilderPage = () => {
   const [{ layout, elements }] = useBuilderContext();
+  const [updateForm, { isLoading }] = useUpdateForm();
   const toastIdsRef = React.useRef<ToastId[]>([]);
   const [
     { inspectedElementId, inEditMode, isSidebarOpen },
     builderPageDispatch,
   ] = useBuilderPageContext();
   const [, builderDispatch] = useBuilderContext();
+  const router = useRouter();
+  const formId = router.query.formId as string;
   const toast = useToast();
   useHotkeys('ctrl+z', () => {
     builderDispatch({ type: 'UNDO_CHANGES', payload: undefined });
@@ -74,7 +64,10 @@ export const BuilderPage = () => {
     }
 
     Object.values(elements)
-      .filter((e: any) => !e.data.key && e.type !== 'EDIT_BOX')
+      .filter(
+        (e: any) =>
+          !e.data.key && e.type !== 'EDIT_BOX' && e.type !== 'SUBMIT_BUTTON'
+      )
       // @ts-ignore
       .forEach((item: BaseBuilderElement & ShortTextElement) => {
         let toastContent: React.ReactNode = <></>;
@@ -232,10 +225,11 @@ export const BuilderPage = () => {
           pt={5}
         >
           <Button
-            onClick={() =>
-              console.log("lay out '", layout, 'elements ', elements)
-            }
+            onClick={() => {
+              updateForm(formId, { layout, elements }).then(console.log);
+            }}
             leftIcon={<SaveIcon width={24} height={24} />}
+            isLoading={isLoading}
           >
             Save
           </Button>

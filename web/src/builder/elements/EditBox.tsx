@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react';
-import { useBuilderPageContext } from '../../BuilderPageContext';
-import { BuilderElement } from '../../builderReducer';
-import { DroppableItem } from '../../layout/mainPanel/DroppableItem';
-import { SortableItem } from '../../layout/mainPanel/SortableItem';
+import { useBuilderPageContext } from '../builderPage/BuilderPageContext';
+import { BuilderElement } from '../builder/builderReducer';
+import { DroppableItem } from '../layout/mainPanel/DroppableItem';
+import { SortableItem } from '../layout/mainPanel/SortableItem';
 
 interface EditBoxProps extends React.PropsWithChildren {
   element: BuilderElement;
@@ -18,7 +18,7 @@ export const EditBox: React.FC<EditBoxProps> = ({
 
   return (
     <SortableItem
-      accept={['EDIT_BOX', 'SHORT_TEXT']}
+      accept={['EDIT_BOX', 'SHORT_TEXT', 'SUBMIT_BUTTON']}
       id={element.id}
       parentId={element.parentId}
       type='EDIT_BOX'
