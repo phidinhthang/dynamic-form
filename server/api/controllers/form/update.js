@@ -30,16 +30,11 @@ module.exports = async function update(req, res) {
       if (!linkedElement) {
         columns = columns.filter((col) => col.id !== column.id);
       } else {
-        console.log("linked ", column, linkedElement);
         column.label = linkedElement.data.label;
         column.key = linkedElement.data.key;
-
-        console.log("column ", column);
       }
     }
   });
-
-  console.log("columns afer ", columns);
 
   const updatedForm = await Form.updateOne({ id: formId }).set({
     elements,

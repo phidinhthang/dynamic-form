@@ -2,7 +2,11 @@ import { useFormContext } from '../features/form/FormContext';
 import { DataTable } from './table/DataTable';
 
 export const TablePage = () => {
-  const [{ data }] = useFormContext();
+  const [{ data, isLoading }] = useFormContext();
+
+  if (isLoading) {
+    return <div>is loading</div>;
+  }
 
   if (!data) {
     return <div>no data provided</div>;
@@ -10,7 +14,7 @@ export const TablePage = () => {
 
   return (
     <>
-      <DataTable columns={data.columns} listUrl={data.listUrl} />
+      <DataTable listUrl={data.listUrl} />
     </>
   );
 };

@@ -14,6 +14,7 @@ module.exports.routes = {
   "POST /form/create": "form/create",
   "DELETE /form/:formId/delete": "form/delete",
   "PATCH /form/:formId/update": "form/update",
+  "PUT /form/:formId/add-column": "form/add-column",
 
   "GET /task/populate": "TaskController.populate",
 };

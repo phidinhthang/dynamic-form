@@ -1,5 +1,8 @@
 import {
   Box,
+  Button,
+  Input,
+  Select,
   Table,
   TableContainer,
   Tbody,
@@ -19,18 +22,25 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import React from 'react';
+import { useTableContext } from './TableContext';
+import { openAddColumnModal } from './tableActions';
+import { ChevronDownIcon, ViewIcon } from '@chakra-ui/icons';
+import { ColumnsPopover } from './ColumnsPopover';
 
 interface DataTableProps {
   listUrl: string;
-  columns: TableColumn[];
 }
 
-export const DataTable: React.FC<DataTableProps> = ({ listUrl, columns }) => {
+export const DataTable: React.FC<DataTableProps> = ({ listUrl }) => {
   const { data } = useGetTableData(listUrl);
+  const [{ columns }, tableDispatch] = useTableContext();
+  const [{ elements }, formDispatch] = useFormDataContext();
+
   // console.log('data ', data, 'colmns ', columns);
   const headers = React.useMemo<ColumnDef<TableColumn, any>[]>(() => {
     return columns.map((col) => ({ accessorKey: col.key, header: col.label }));
   }, [columns]);
+  console.log('headers ', headers);
 
   const table = useReactTable<TableColumn>({
     data: data as any,
@@ -38,62 +48,76 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, columns }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const onOpenAddColumnModal = () => tableDispatch(openAddColumnModal());
+
   if (!data) {
     return <div>loading...</div>;
   }
 
   return (
     <Box>
-      <TableContainer
-        borderWidth={1}
-        borderColor={'gray.100'}
-        borderRadius={12}
-        width='full'
-        maxW={900}
-        mx='auto'
-        px={4}
-      >
-        <Table>
-          <Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => {
+      <Box display='flex' justifyContent='space-between' py={2}>
+        <Box display='flex' gap={2}>
+          <Select
+            placeholder='Choose a field'
+            size='md'
+            variant='filled'
+            bg='blue.50'
+          >
+            {columns.map((column) => (
+              <option value={column.key}>{column.label}</option>
+            ))}
+          </Select>
+          <Input />
+        </Box>
+        <Box>
+          <ColumnsPopover columns={columns} />
+        </Box>
+      </Box>
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, index) => {
+                return (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <Text>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </Text>
+                    )}
+                  </th>
+                );
+              })}
+              <th>
+                <button onClick={onOpenAddColumnModal}>add</button>
+              </th>
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => {
                   return (
-                    <Th key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : (
-                        <Text>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </Text>
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                    </Th>
+                    </td>
                   );
                 })}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody>
-            {table.getRowModel().rows.map((row) => {
-              return (
-                <Tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <Td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Td>
-                    );
-                  })}
-                </Tr>
-              );
-            })}
-          </Tbody>
-        </Table>
-      </TableContainer>
+                <td style={{ backgroundColor: 'gray' }}></td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </Box>
   );
 };

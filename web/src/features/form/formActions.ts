@@ -1,6 +1,6 @@
 import { createAsyncAction } from '../../utils/createAsyncAction';
 import { ValueOf } from '../../utils/types/ValueOf';
-import { Form } from '../forms/types';
+import { Form, TableColumn } from '../forms/types';
 
 export const getFormAsync = createAsyncAction('GET_FORM')<
   undefined,
@@ -8,4 +8,12 @@ export const getFormAsync = createAsyncAction('GET_FORM')<
   any
 >();
 
-export type FormActions = ReturnType<ValueOf<typeof getFormAsync>>;
+export const addFormColumnAsync = createAsyncAction('ADD_FORM_COLUMN')<
+  TableColumn,
+  any,
+  TableColumn
+>();
+
+export type FormActions =
+  | ReturnType<ValueOf<typeof getFormAsync>>
+  | ReturnType<ValueOf<typeof addFormColumnAsync>>;
