@@ -14,7 +14,7 @@ export const TablePage = () => {
 
   return (
     <>
-      <DataTable listUrl={data.listUrl} />
+      <DataTable listUrl={data.listUrl} formId={data.id} />
     </>
   );
 };

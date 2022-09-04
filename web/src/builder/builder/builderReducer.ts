@@ -287,8 +287,17 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
         }
 
         case 'SET_ELEMENT_TOUCHED': {
-          draftState.elements[action.payload.elementId].isTouched =
-            action.payload.isTouched;
+          const element = draftState.elements[action.payload.elementId];
+          if (element) {
+            element.isTouched = true;
+          }
+          break;
+        }
+
+        case 'SET_ALL_ELEMENT_TOUCHED': {
+          Object.values(draftState.elements).forEach((element) => {
+            element.isTouched = true;
+          });
           break;
         }
 
@@ -296,7 +305,8 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
           const undo = timeline[currentVersion]?.undo;
           if (!undo) return;
           currentVersion--;
-          return applyPatches(state, undo);
+          applyPatches(state, undo);
+          break;
         }
 
         case 'REDO_CHANGES': {
@@ -305,10 +315,10 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
 
           if (!redo) {
             currentVersion--;
-            return;
+            break;
           }
-
-          return applyPatches(state, redo);
+          applyPatches(state, redo);
+          break;
         }
 
         default: {

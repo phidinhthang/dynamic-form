@@ -52,6 +52,32 @@ export const tableReducer = (state: TableCtx, action: TableActions) => {
       state.isColumnsPopoverOpen = false;
       break;
     }
+    case 'SHOW_COLUMN': {
+      const column = state.columns.find(
+        (col) => col.id === action.payload.columnId
+      );
+      if (column) {
+        column.isHidden = false;
+      }
+      break;
+    }
+
+    case 'HIDE_COLUMN': {
+      const column = state.columns.find(
+        (col) => col.id === action.payload.columnId
+      );
+      if (column) {
+        column.isHidden = true;
+      }
+      break;
+    }
+
+    case 'REORDER_COLUMN': {
+      const { fromIndex, toIndex } = action.payload;
+      const reorderedColumn = state.columns.splice(fromIndex, 1)[0];
+      state.columns.splice(toIndex, 0, reorderedColumn);
+      break;
+    }
 
     default: {
       throw Error(`Action ${action} is not handled.`);

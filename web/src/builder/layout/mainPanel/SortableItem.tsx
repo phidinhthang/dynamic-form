@@ -13,6 +13,7 @@ interface SortableItemProps {
   type: ElementType;
   accept: ElementType | ElementType[];
   children?: React.ReactNode;
+  onReorder?: (dragIndex: number, hoverIndex: number) => void;
 }
 
 interface DragItem {
@@ -29,6 +30,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({
   type,
   children,
   parentId,
+  onReorder,
 }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [, dispatch] = useBuilderContext();
@@ -70,11 +72,16 @@ export const SortableItem: React.FC<SortableItemProps> = ({
         return;
       }
 
+      if (typeof onReorder !== 'undefined') {
+        onReorder(dragIndex, hoverIndex);
+      } else {
+        dispatch({
+          type: 'REORDER_ELEMENT',
+          payload: { parentId, dragIndex, hoverIndex },
+        });
+      }
+
       // @move card
-      dispatch({
-        type: 'REORDER_ELEMENT',
-        payload: { parentId, dragIndex, hoverIndex },
-      });
       item.index = hoverIndex;
       item.parentId = parentId;
     },
@@ -100,14 +107,16 @@ export const SortableItem: React.FC<SortableItemProps> = ({
       }
 
       // move item from item.parentId, item.id to dropResult.id
-      if (dropId)
-        dispatch({
-          type: 'MOVE_ELEMENT',
-          payload: {
-            from: { parentId, id: item.id },
-            to: { parentId: dropId },
-          },
-        });
+      if (typeof onReorder === 'undefined') {
+        if (dropId)
+          dispatch({
+            type: 'MOVE_ELEMENT',
+            payload: {
+              from: { parentId, id: item.id },
+              to: { parentId: dropId },
+            },
+          });
+      }
       clearDropId();
     },
   });

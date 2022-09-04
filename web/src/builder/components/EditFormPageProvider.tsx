@@ -1,21 +1,16 @@
 import { useFormContext } from '../../features/form/FormContext';
 import { BuilderProvider } from '../builder/BuilderContext';
 import { BuilderElement, initialValues } from '../builder/builderReducer';
-import { TableProvider } from '../table/TableContext';
 
-interface ReceiveFormDataProps extends React.PropsWithChildren {}
+export interface EditFormPageProviderProps extends React.PropsWithChildren {}
 
-export const ReceiveFormData: React.FC<ReceiveFormDataProps> = ({
+export const EditFormPageProvider: React.FC<EditFormPageProviderProps> = ({
   children,
 }) => {
   const [{ data }] = useFormContext();
 
   if (!data) {
-    return (
-      <BuilderProvider initialValues={initialValues}>
-        {children}
-      </BuilderProvider>
-    );
+    return <>{children}</>;
   }
 
   const elements = Object.entries(data.elements).reduce((acc, [key, value]) => {
@@ -25,9 +20,7 @@ export const ReceiveFormData: React.FC<ReceiveFormDataProps> = ({
 
   return (
     <BuilderProvider initialValues={{ elements, layout: data.layout }}>
-      <TableProvider initialValues={{ columns: data.columns }}>
-        {children}
-      </TableProvider>
+      {children}
     </BuilderProvider>
   );
 };

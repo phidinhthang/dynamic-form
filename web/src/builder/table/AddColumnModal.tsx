@@ -46,20 +46,22 @@ export const AddColumnModal: React.FC<AddColumnModalProps> = ({ formId }) => {
   const closeModal = () => tableDispatch(closeAddColumnModal());
   const unmountModal = () => tableDispatch(unmountAddColumnModal());
 
-  const formValidationSchema: yup.SchemaOf<Omit<TableColumn, 'id'>> = yup
-    .object()
-    .shape({
-      key: yup.string().required('Key is required.'),
-      label: yup.string().required('Label is required.'),
-      type: yup.string().required('Type is required.') as any,
-    });
+  const formValidationSchema: yup.SchemaOf<
+    Omit<TableColumn, 'id' | 'isHidden'>
+  > = yup.object().shape({
+    key: yup.string().required('Key is required.'),
+    label: yup.string().required('Label is required.'),
+    type: yup.string().required('Type is required.') as any,
+  });
 
   return (
     <AddColumnModalWrapper>
-      <Formik<Omit<TableColumn, 'id'>>
+      <Formik<Omit<TableColumn, 'id' | 'isHidden'>>
         initialValues={{ key: '', label: '', type: undefined as any }}
         onSubmit={(values) => {
-          addColumn({ ...values, id: nanoid() }).finally(closeModal);
+          addColumn({ ...values, id: nanoid(), isHidden: false }).finally(
+            closeModal
+          );
         }}
         validationSchema={formValidationSchema}
         validateOnBlur

@@ -3,6 +3,11 @@ import { createAction } from '../../utils/createAction';
 import { createAsyncAction } from '../../utils/createAsyncAction';
 import { ValueOf } from '../../utils/types/ValueOf';
 
+export interface ShowOrHideColumnPayload {
+  columnId: string;
+  isHidden: boolean;
+}
+
 export const addColumnAsync = createAsyncAction('ADD_COLUMN')<
   TableColumn,
   any,
@@ -31,10 +36,29 @@ export const closeColumnsPopover = createAction(
   (action) => () => action(undefined)
 );
 
+export const showColumn = createAction(
+  'SHOW_COLUMN',
+  (action) => (columnId: string) => action({ columnId })
+);
+
+export const hideColumn = createAction(
+  'HIDE_COLUMN',
+  (action) => (columnId: string) => action({ columnId })
+);
+
+export const reorderColumn = createAction(
+  'REORDER_COLUMN',
+  (action) => (fromIndex: number, toIndex: number) =>
+    action({ fromIndex, toIndex })
+);
+
 export type TableActions =
   | ReturnType<ValueOf<typeof addColumnAsync>>
   | ReturnType<typeof openAddColumnModal>
   | ReturnType<typeof closeAddColumnModal>
   | ReturnType<typeof unmountAddColumnModal>
   | ReturnType<typeof openColumnsPopover>
-  | ReturnType<typeof closeColumnsPopover>;
+  | ReturnType<typeof closeColumnsPopover>
+  | ReturnType<typeof showColumn>
+  | ReturnType<typeof hideColumn>
+  | ReturnType<typeof reorderColumn>;

@@ -15,6 +15,8 @@ module.exports.routes = {
   "DELETE /form/:formId/delete": "form/delete",
   "PATCH /form/:formId/update": "form/update",
   "PUT /form/:formId/add-column": "form/add-column",
+  "PATCH /form/:formId/column/:columnId/toggle-visibility":
+    "form/column-toggle-visibility",
 
   "GET /task/populate": "TaskController.populate",
 };

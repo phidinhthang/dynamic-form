@@ -4,10 +4,11 @@ import {
 } from '../../builder/builder/builderReducer';
 
 export interface TableColumn {
-  id?: string;
+  id: string;
   label: string;
   key: string;
   type: FieldElementType;
+  isHidden: boolean;
 }
 
 export interface Form {

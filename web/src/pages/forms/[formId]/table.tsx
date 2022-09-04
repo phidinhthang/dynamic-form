@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { ReceiveFormData } from '../../../builder/components/ReceiveFormData';
+import { TablePageProvider } from '../../../builder/components/TablePageProvider';
 import { WaitForFormData } from '../../../builder/components/WaitForFormData';
 import { AddColumnModal } from '../../../builder/table/AddColumnModal';
 import { TablePage } from '../../../builder/TablePage';
@@ -11,10 +11,10 @@ export default function Page() {
   return (
     <FormProvider>
       <WaitForFormData>
-        <ReceiveFormData>
+        <TablePageProvider>
           <TablePage />
           <AddColumnModal formId={router.query.formId as string} />
-        </ReceiveFormData>
+        </TablePageProvider>
       </WaitForFormData>
     </FormProvider>
   );

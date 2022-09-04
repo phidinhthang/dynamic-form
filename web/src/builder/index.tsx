@@ -33,6 +33,7 @@ import { PressIcon } from '../icons/PressIcon';
 import { useRouter } from 'next/router';
 import { useGetForm } from '../features/form/useGetForm';
 import { useUpdateForm } from '../features/updateForm/useUpdateForm';
+import { setAllElementTouched } from './builder/builderActions';
 
 export const BuilderPage = () => {
   const [{ layout, elements }] = useBuilderContext();
@@ -46,6 +47,10 @@ export const BuilderPage = () => {
   const router = useRouter();
   const formId = router.query.formId as string;
   const toast = useToast();
+  const hasError =
+    Object.values(elements).findIndex(
+      (element) => element.buildErrors.length > 0
+    ) !== -1;
   useHotkeys('ctrl+z', () => {
     builderDispatch({ type: 'UNDO_CHANGES', payload: undefined });
   });
@@ -226,7 +231,11 @@ export const BuilderPage = () => {
         >
           <Button
             onClick={() => {
-              updateForm(formId, { layout, elements }).then(console.log);
+              if (hasError) {
+                builderDispatch(setAllElementTouched());
+              } else {
+                updateForm(formId, { layout, elements }).then(console.log);
+              }
             }}
             leftIcon={<SaveIcon width={24} height={24} />}
             isLoading={isLoading}

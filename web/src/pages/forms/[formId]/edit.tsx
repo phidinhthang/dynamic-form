@@ -4,6 +4,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { BuilderPageProvider } from '../../../builder/builderPage/BuilderPageContext';
 import { FormProvider } from '../../../features/form/FormContext';
 import { WaitForFormData } from '../../../builder/components/WaitForFormData';
+import { BuilderProvider } from '../../../builder/builder/BuilderContext';
+import { EditFormPageProvider } from '../../../builder/components/EditFormPageProvider';
 
 export default function EditTestPage() {
   return (
@@ -11,7 +13,9 @@ export default function EditTestPage() {
       <FormProvider>
         <BuilderPageProvider>
           <WaitForFormData>
-            <BuilderPage />
+            <EditFormPageProvider>
+              <BuilderPage />
+            </EditFormPageProvider>
           </WaitForFormData>
         </BuilderPageProvider>
       </FormProvider>

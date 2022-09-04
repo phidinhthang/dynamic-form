@@ -50,6 +50,11 @@ export const setElementTouched = createAction(
       action({ elementId, isTouched })
 );
 
+export const setAllElementTouched = createAction(
+  'SET_ALL_ELEMENT_TOUCHED',
+  (action) => () => action(undefined)
+);
+
 export const deleteElement = createAction(
   'DELETE_ELEMENT',
   (action) => (elementId: string) => action(elementId)
@@ -67,4 +72,5 @@ export type BuilderActions =
   | ReturnType<typeof undoChanges>
   | ReturnType<typeof redoChanges>
   | ReturnType<typeof changeElementKey>
-  | ReturnType<typeof setElementTouched>;
+  | ReturnType<typeof setElementTouched>
+  | ReturnType<typeof setAllElementTouched>;

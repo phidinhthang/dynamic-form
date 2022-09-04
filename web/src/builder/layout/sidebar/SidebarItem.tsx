@@ -15,7 +15,6 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   children,
   icon,
 }) => {
-  // const { setData } = useBuilderContext();
   const [, dispatch] = useBuilderContext();
   const [{ opacity }, drag] = useDrag(() => ({
     type: elementType,
@@ -38,7 +37,6 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         });
       }
       clearDropId();
-      //  setData((data) => [...data, { id: nanoid(), name: type }]);
     },
     collect: (monitor) => {
       return {
