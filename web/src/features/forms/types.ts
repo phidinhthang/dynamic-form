@@ -1,7 +1,4 @@
-import {
-  BuilderElement,
-  FieldElementType,
-} from '../../builder/builder/builderReducer';
+import { BuilderElement, FieldElementType } from '../../builder/elements/types';
 
 export interface TableColumn {
   id: string;

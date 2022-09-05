@@ -1,6 +1,7 @@
-import { BuilderCtx } from '../builder/builderReducer';
+import { BuilderCtx } from '../elements/types';
 import { FormDataActions } from './formDataActions';
 import mixin from 'mixin-deep';
+import { validate as validateShortTextField } from '../elements/ShortText/validate';
 
 interface BaseFieldData {
   isTouched: boolean;
@@ -36,28 +37,9 @@ export const formDataReducer = (
       const { elementId, value } = action.payload;
       mixin(state.data[elementId], { value });
       const element = state.elements[elementId];
+      const field = state.data[element.id];
       if (element.type === 'SHORT_TEXT') {
-        if (element.data.validations.isRequired.value === true && !value) {
-          state.data[elementId].errors.isRequired = true;
-        } else {
-          state.data[elementId].errors.isRequired = false;
-        }
-        if (
-          typeof element.data.validations.minLength.value === 'number' &&
-          value.length < element.data.validations.minLength.value
-        ) {
-          state.data[elementId].errors.minLength = true;
-        } else {
-          state.data[elementId].errors.minLength = false;
-        }
-        if (
-          typeof element.data.validations.maxLength.value === 'number' &&
-          value.length > element.data.validations.maxLength.value
-        ) {
-          state.data[elementId].errors.maxLength = true;
-        } else {
-          state.data[elementId].errors.maxLength = false;
-        }
+        validateShortTextField(element, field);
       }
       break;
     }
@@ -67,32 +49,10 @@ export const formDataReducer = (
     }
     case 'VALIDATE_FIELDS': {
       Object.values(state.elements).forEach((element) => {
-        const data = state.data;
-        const field = data[element.id];
+        const field = state.data[element.id];
         field.isTouched = true;
         if (element.type === 'SHORT_TEXT') {
-          const validations = element.data.validations;
-          if (validations.isRequired.value && !field.value) {
-            field.errors.isRequired = true;
-          } else {
-            field.errors.isRequired = false;
-          }
-          if (
-            typeof validations.minLength.value === 'number' &&
-            (!field.value || field.value.length < validations.minLength.value)
-          ) {
-            field.errors.minLength = true;
-          } else {
-            field.errors.minLength = false;
-          }
-          if (
-            typeof validations.maxLength.value === 'number' &&
-            (!field.value || field.value.length > validations.maxLength.value)
-          ) {
-            field.errors.maxLength = true;
-          } else {
-            field.errors.maxLength = false;
-          }
+          validateShortTextField(element, field);
         }
       });
       break;

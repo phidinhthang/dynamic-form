@@ -5,7 +5,7 @@ import {
   setElementTouched,
 } from '../../builder/builderActions';
 import { useBuilderContext } from '../../builder/BuilderContext';
-import { ExactBuilderElement } from '../../builder/builderReducer';
+import { ExactBuilderElement } from '../types';
 
 interface EditShortTextProps {
   element: ExactBuilderElement<'SHORT_TEXT'>;

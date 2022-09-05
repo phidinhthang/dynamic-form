@@ -1,6 +1,6 @@
 import { Box, Button } from '@chakra-ui/react';
 import React from 'react';
-import { BuilderCtx } from '../builder/builderReducer';
+import { BuilderCtx } from '../elements/types';
 import { DroppableItem } from '../layout/mainPanel/DroppableItem';
 import { SortableItem } from '../layout/mainPanel/SortableItem';
 import { EdittableWrapper } from './EditableWrapper';

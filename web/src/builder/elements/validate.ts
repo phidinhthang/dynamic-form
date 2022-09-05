@@ -1,4 +1,4 @@
-import { BuilderElement, ElementType } from '../builder/builderReducer';
+import { BuilderElement, ElementType } from './types';
 
 type BuilderElementError = {
   id: string;

@@ -1,6 +1,7 @@
 import { useFormContext } from '../../features/form/FormContext';
 import { BuilderProvider } from '../builder/BuilderContext';
-import { BuilderElement, initialValues } from '../builder/builderReducer';
+import { initialValues } from '../builder/builderReducer';
+import { BuilderElement } from '../elements/types';
 
 export interface EditFormPageProviderProps extends React.PropsWithChildren {}
 

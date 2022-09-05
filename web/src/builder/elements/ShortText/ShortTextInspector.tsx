@@ -18,7 +18,7 @@ import {
   changeElementKey,
 } from '../../builder/builderActions';
 import { useBuilderContext } from '../../builder/BuilderContext';
-import { ExactBuilderElement } from '../../builder/builderReducer';
+import { ExactBuilderElement } from '../types';
 import { useBuilderPageContext } from '../../builderPage/BuilderPageContext';
 
 interface ShortTextInspectorProps {
@@ -162,6 +162,12 @@ export const ShortTextInspector: React.FC<ShortTextInspectorProps> = ({
                   <FormLabel>Min Length</FormLabel>
                   <NumberInput
                     value={element.data.validations.minLength.value}
+                    max={
+                      typeof element.data.validations.maxLength.value ===
+                      'number'
+                        ? element.data.validations.maxLength.value
+                        : undefined
+                    }
                     onChange={(_, value) => {
                       builderDispatch(
                         changeElementData<'SHORT_TEXT'>()({
@@ -220,6 +226,12 @@ export const ShortTextInspector: React.FC<ShortTextInspectorProps> = ({
                   <FormLabel>Max Length</FormLabel>
                   <NumberInput
                     value={element.data.validations.maxLength.value}
+                    min={
+                      typeof element.data.validations.minLength.value ===
+                      'number'
+                        ? element.data.validations.minLength.value
+                        : undefined
+                    }
                     onChange={(_, value) => {
                       builderDispatch(
                         changeElementData<'SHORT_TEXT'>()({

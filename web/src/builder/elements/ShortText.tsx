@@ -2,7 +2,7 @@ import { Box, Input } from '@chakra-ui/react';
 import React from 'react';
 import { changeElementData } from '../builder/builderActions';
 import { useBuilderContext } from '../builder/BuilderContext';
-import { ExactBuilderElement } from '../builder/builderReducer';
+import { ExactBuilderElement } from './types';
 
 interface ShortTextProps {
   inEditMode?: boolean;

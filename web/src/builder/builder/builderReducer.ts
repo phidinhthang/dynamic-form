@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { BuilderActions } from './builderActions';
 import { applyPatches, enablePatches, Patch, produce } from 'immer';
 import mixin from 'mixin-deep';
@@ -7,89 +6,18 @@ import { group } from '../../utils/group';
 import { pushOne } from '../../utils/pushOne';
 import { fork } from '../../utils/fork';
 import { remove } from '../../utils/remove';
+import { createShortTextElement } from '../elements/ShortText/createShortTextElement';
+import { createEditBoxElement } from '../elements/EditBox/createEditBoxElement';
+import { createSubmitButtonElement } from '../elements/SubmitButton/createSubmitButtonElement';
+import {
+  FieldElementType,
+  ElementType,
+  BuilderCtx,
+  BuilderElement,
+  FieldElement,
+} from '../elements/types';
 
 enablePatches();
-
-export type ElementBuildError = {
-  errorKey: string;
-  message: string;
-};
-
-export interface BaseBuilderElement {
-  id: string;
-  children: string[];
-  parentId: string;
-  buildErrors: ElementBuildError[];
-  isTouched: boolean;
-}
-
-export interface ShortTextElement {
-  type: 'SHORT_TEXT';
-  data: {
-    label: string;
-    subLabel: string;
-    placeholder: string;
-    key: string;
-    defaultValue: string;
-    validations: {
-      isRequired: {
-        value: boolean;
-        errorMessage: string;
-      };
-      minLength: {
-        value?: number;
-        errorMessage: string;
-      };
-      maxLength: {
-        value?: number;
-        errorMessage: string;
-      };
-    };
-  };
-}
-
-export interface EditBoxElement {
-  type: 'EDIT_BOX';
-  data: {};
-}
-
-export interface SubmitButtonElement {
-  type: 'SUBMIT_BUTTON';
-  data: {};
-}
-
-export type AllBuilderElement = {
-  SHORT_TEXT: ShortTextElement;
-  EDIT_BOX: EditBoxElement;
-  SUBMIT_BUTTON: SubmitButtonElement;
-};
-
-export type ElementType = keyof AllBuilderElement;
-
-export type ExactBuilderElement<T extends ElementType> = BaseBuilderElement &
-  AllBuilderElement[T];
-
-export type BuilderElement = ExactBuilderElement<ElementType>;
-
-export interface BuilderCtx {
-  layout: string[];
-  elements: Record<string, BuilderElement>;
-}
-
-type _AllFieldElement = {
-  [K in keyof AllBuilderElement]: Extract<
-    AllBuilderElement[K],
-    { data: { key: string } }
-  >;
-};
-
-export type FieldElementType = {
-  [K in keyof _AllFieldElement]: _AllFieldElement[K] extends never ? never : K;
-}[keyof _AllFieldElement];
-
-export type FieldElement = _AllFieldElement[keyof _AllFieldElement] &
-  BaseBuilderElement;
-export type ExactFieldElement<T extends FieldElementType> = _AllFieldElement[T];
 
 export const allFieldElementTypes: FieldElementType[] = ['SHORT_TEXT'];
 
@@ -154,37 +82,13 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
         case 'ADD_ELEMENT': {
           const { parentId, type } = action.payload;
           // @ts-ignore
-          const element: BuilderElement = {
-            id: nanoid(),
-            parentId,
-            type,
-            children: [],
-            buildErrors: [],
-            isTouched: false,
-          };
-          if (element.type === 'SHORT_TEXT') {
-            element['data'] = {
-              label: 'Type a label',
-              subLabel: '',
-              placeholder: '',
-              key: '',
-              defaultValue: '',
-              validations: {
-                isRequired: { value: false, errorMessage: '' },
-                minLength: { errorMessage: '' },
-                maxLength: { errorMessage: '' },
-              },
-            };
-            element['buildErrors'] = [
-              {
-                errorKey: 'emptyKey',
-                message: 'Element key is required.',
-              },
-            ];
-          } else if (element.type === 'EDIT_BOX') {
-            element['data'] = {};
-          } else if (element.type === 'SUBMIT_BUTTON') {
-            element['data'] = {};
+          let element: BuilderElement;
+          if (type === 'SHORT_TEXT') {
+            element = createShortTextElement({ parentId });
+          } else if (type === 'EDIT_BOX') {
+            element = createEditBoxElement({ parentId });
+          } else {
+            element = createSubmitButtonElement({ parentId });
           }
           draftState.elements[element.id] = element;
           if (parentId === 'root') {

@@ -5,7 +5,7 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import { ExactBuilderElement } from '../../builder/builderReducer';
+import { ExactBuilderElement } from '../types';
 import { changeValue, setTouched } from '../../formData/formDataActions';
 import { useFormDataContext } from '../../formData/FormDataContext';
 

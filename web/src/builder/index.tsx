@@ -25,7 +25,8 @@ import {
 } from './builderPage/builderPageActions';
 import { SaveIcon } from '../icons/SaveIcon';
 import { group } from '../utils/group';
-import { BaseBuilderElement, ShortTextElement } from './builder/builderReducer';
+import { BaseBuilderElement } from './elements/types';
+import { ShortTextElement } from './elements/ShortText/interface';
 import { listify } from '../utils/listify';
 import { InfoIcon } from '@chakra-ui/icons';
 import { intersperse } from '../utils/intersperse';

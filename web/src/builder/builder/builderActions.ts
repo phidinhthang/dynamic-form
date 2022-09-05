@@ -5,7 +5,7 @@ import {
   ElementType,
   ExactBuilderElement,
   FieldElementType,
-} from './builderReducer';
+} from '../elements/types';
 
 export const reorderElement = createAction(
   'REORDER_ELEMENT',

@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { useDrag } from 'react-dnd';
 import { useBuilderContext } from '../../builder/BuilderContext';
-import { ElementType } from '../../builder/builderReducer';
+import { ElementType } from '../../elements/types';
 import { clearDropId, getDropId } from '../../dropId';
 
 interface SidebarItemProps extends React.PropsWithChildren {

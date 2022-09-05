@@ -2,7 +2,7 @@ import { Box, BoxProps } from '@chakra-ui/react';
 import autoAnimate from '@formkit/auto-animate';
 import React from 'react';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { ElementType } from '../../builder/builderReducer';
+import { ElementType } from '../../elements/types';
 import { setDropId } from '../../dropId';
 
 interface DroppableItemProps extends BoxProps {

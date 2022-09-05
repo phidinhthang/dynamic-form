@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { useBuilderPageContext } from '../builderPage/BuilderPageContext';
-import { BuilderElement } from '../builder/builderReducer';
+import { BuilderElement } from './types';
 import { DroppableItem } from '../layout/mainPanel/DroppableItem';
 import { SortableItem } from '../layout/mainPanel/SortableItem';
 

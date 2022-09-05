@@ -1,7 +1,7 @@
 import React from 'react';
 import { useImmerReducer } from 'use-immer';
 import { createContext } from '../../utils/createContext';
-import { BuilderCtx } from '../builder/builderReducer';
+import { BuilderCtx } from '../elements/types';
 import { FormDataActions } from './formDataActions';
 import { FormDataCtx, formDataReducer } from './formDataReducer';
 

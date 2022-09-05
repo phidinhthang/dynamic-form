@@ -6,7 +6,7 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react';
-import { ExactBuilderElement } from '../../builder/builderReducer';
+import { ExactBuilderElement } from '../types';
 
 interface EditBoxInspectorProps {
   element: ExactBuilderElement<'SHORT_TEXT'>;

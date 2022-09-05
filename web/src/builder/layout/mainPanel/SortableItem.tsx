@@ -3,7 +3,7 @@ import { Identifier, XYCoord } from 'dnd-core';
 import React from 'react';
 import { DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
 import { useBuilderContext } from '../../builder/BuilderContext';
-import { ElementType } from '../../builder/builderReducer';
+import { ElementType } from '../../elements/types';
 import { clearDropId, getDropId } from '../../dropId';
 
 interface SortableItemProps {

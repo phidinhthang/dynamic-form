@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { ExactBuilderElement } from '../../builder/builderReducer';
+import { ExactBuilderElement } from '../types';
 
 interface EditBoxProps extends React.PropsWithChildren {
   element: ExactBuilderElement<'EDIT_BOX'>;

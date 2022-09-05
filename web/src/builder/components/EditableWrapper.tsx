@@ -5,7 +5,7 @@ import { deleteElement } from '../builder/builderActions';
 import { useBuilderContext } from '../builder/BuilderContext';
 import { setInspectElementId } from '../builderPage/builderPageActions';
 import { useBuilderPageContext } from '../builderPage/BuilderPageContext';
-import { BuilderElement } from '../builder/builderReducer';
+import { BuilderElement } from '../elements/types';
 import { useSetSelectedElement } from '../builderPage/useSetSelectedElement';
 
 interface EditableWrapperProps {
