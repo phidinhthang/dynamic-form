@@ -18,10 +18,13 @@ export const setTouched = createAction(
   (action) => (elementId: string) => action(elementId)
 );
 
-export const submitForm = createAction('SUBMIT_FORM', (action) => action);
+export const validateFields = createAction(
+  'VALIDATE_FIELDS',
+  (action) => () => action(undefined)
+);
 
 export type FormDataActions =
   | ReturnType<typeof changeData>
   | ReturnType<typeof changeValue>
-  | ReturnType<typeof submitForm>
+  | ReturnType<typeof validateFields>
   | ReturnType<typeof setTouched>;

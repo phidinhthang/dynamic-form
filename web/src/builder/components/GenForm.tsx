@@ -11,10 +11,12 @@ import { FormDataProvider } from '../formData/FormDataContext';
 import { Form } from '../elements/Form/Form';
 import { SubmitButton } from '../elements/SubmitButton/SubmitButton';
 import { EditEditBox } from '../elements/EditBox/EditEditBox';
+import { TableRow } from '../table/types';
 
 interface GenFormProps {
   mode?: 'preview' | 'edit';
   data: BuilderCtx;
+  onSubmit?: (row: TableRow) => void;
 }
 
 const recursiveRenderForm = (
@@ -99,6 +101,7 @@ const recursiveRenderForm = (
 export const GenForm: React.FC<GenFormProps> = ({
   data: { elements, layout },
   mode = 'preview',
+  onSubmit,
 }) => {
   const inEditMode = mode === 'edit';
   const form = recursiveRenderForm({ layout, elements }, inEditMode);
@@ -131,7 +134,7 @@ export const GenForm: React.FC<GenFormProps> = ({
   ) : (
     <FormDataProvider value={{ elements, layout }}>
       <Box px={4} py={4}>
-        <Form>{form}</Form>
+        <Form onSubmit={onSubmit}>{form}</Form>
       </Box>
     </FormDataProvider>
   );

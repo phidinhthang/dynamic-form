@@ -24,9 +24,16 @@ import {
 } from '@tanstack/react-table';
 import React from 'react';
 import { useTableContext } from './TableContext';
-import { openAddColumnModal } from './tableActions';
+import {
+  closeDeleteTableDataModal,
+  openAddColumnModal,
+  openDeleteTableDataModal,
+  openPostTableDataModal,
+  setRowSelectedIds,
+} from './tableActions';
 import { ColumnsPopover } from './ColumnsPopover';
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { TableRow } from './types';
 
 interface DataTableProps {
   listUrl: string;
@@ -35,9 +42,13 @@ interface DataTableProps {
 
 export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
   const { data } = useGetTableData(listUrl);
-  const [{ columns }, tableDispatch] = useTableContext();
+  const [{ columns, selectedRowIds }, tableDispatch] = useTableContext();
   const [{ elements }, formDispatch] = useFormDataContext();
-  const [rowSelection, setRowSelection] = React.useState({});
+
+  const rowSelection = selectedRowIds.reduce((acc, curr) => {
+    acc[curr] = true;
+    return acc;
+  }, {} as Record<string, boolean>);
 
   const headers = React.useMemo<ColumnDef<TableColumn, any>[]>(() => {
     return columns
@@ -45,15 +56,20 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
       .map((col) => ({ accessorKey: col.key, header: col.label }));
   }, [columns]);
 
-  const table = useReactTable<TableColumn>({
+  const table = useReactTable<TableRow>({
     data: data as any,
-    columns: headers,
+    columns: headers as any,
     state: { rowSelection },
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: (rowSelectionUpdater) => {
+      const newRowSelection =
+        typeof rowSelectionUpdater === 'function'
+          ? rowSelectionUpdater?.(rowSelection)
+          : rowSelectionUpdater;
+      tableDispatch(setRowSelectedIds(Object.keys(newRowSelection)));
+    },
+    getRowId: (row) => row.id as string,
   });
-
-  console.log('row selection ', rowSelection);
 
   const onOpenAddColumnModal = () => tableDispatch(openAddColumnModal());
 
@@ -77,7 +93,30 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
           </Select>
           <Input />
         </Box>
-        <Box>
+        <Box display='flex' alignItems='center' gap={4}>
+          {!!selectedRowIds.length && (
+            <Button
+              colorScheme='linkedin'
+              onClick={() => tableDispatch(setRowSelectedIds([]))}
+            >
+              Deselect
+            </Button>
+          )}
+          <Button onClick={() => tableDispatch(openPostTableDataModal())}>
+            Add new row
+          </Button>
+        </Box>
+        <Box display='flex' alignItems='center' gap={4}>
+          {selectedRowIds.length === 1 && (
+            <Button
+              variant='outline'
+              colorScheme='red'
+              leftIcon={<DeleteIcon />}
+              onClick={() => tableDispatch(openDeleteTableDataModal())}
+            >
+              Delete
+            </Button>
+          )}
           <ColumnsPopover columns={columns} formId={formId} />
         </Box>
       </Box>

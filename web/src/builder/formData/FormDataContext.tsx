@@ -1,7 +1,7 @@
 import React from 'react';
 import { useImmerReducer } from 'use-immer';
 import { createContext } from '../../utils/createContext';
-import { BuilderCtx } from '../builderReducer';
+import { BuilderCtx } from '../builder/builderReducer';
 import { FormDataActions } from './formDataActions';
 import { FormDataCtx, formDataReducer } from './formDataReducer';
 
@@ -23,6 +23,8 @@ export const FormDataProvider: React.FC<FormDataProviderProps> = ({
       data[element.id] = {
         errors: { isRequired: false, maxLength: false, minLength: false },
         isTouched: false,
+        key: (element.data as any)?.key,
+        value: (element.data as any)?.defaultValue,
       };
     });
     return data;

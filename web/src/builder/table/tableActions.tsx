@@ -2,11 +2,33 @@ import { TableColumn } from '../../features/forms/types';
 import { createAction } from '../../utils/createAction';
 import { createAsyncAction } from '../../utils/createAsyncAction';
 import { ValueOf } from '../../utils/types/ValueOf';
+import { TableData, TableRow } from './types';
 
 export interface ShowOrHideColumnPayload {
   columnId: string;
   isHidden: boolean;
 }
+
+export const getTableDataAsync = createAsyncAction('GET_TABLE_DATA')<
+  undefined,
+  TableData,
+  any
+>();
+
+export const addNewRow = createAction(
+  'ADD_NEW_ROW',
+  (action) => (row: TableRow) => action(row)
+);
+
+export const deleteRow = createAction(
+  'DELETE_ROW',
+  (action) => (rowId: string) => action(rowId)
+);
+
+export const setRowSelectedIds = createAction(
+  'SET_ROW_SELECTED_IDS',
+  (action) => (rowSelectedIds: string[]) => action(rowSelectedIds)
+);
 
 export const addColumnAsync = createAsyncAction('ADD_COLUMN')<
   TableColumn,
@@ -52,8 +74,34 @@ export const reorderColumn = createAction(
     action({ fromIndex, toIndex })
 );
 
+export const openPostTableDataModal = createAction(
+  'OPEN_POST_TABLE_DATA_MODAL',
+  (action) => () => action(undefined)
+);
+export const closePostTableDataModal = createAction(
+  'CLOSE_POST_TABLE_DATA_MODAL',
+  (action) => () => action(undefined)
+);
+export const unmountPostTableDataModal = createAction(
+  'UNMOUNT_POST_TABLE_DATA_MODAL',
+  (action) => () => action(undefined)
+);
+
+export const openDeleteTableDataModal = createAction(
+  'OPEN_DELETE_TABLE_DATA_MODAL',
+  (action) => () => action(undefined)
+);
+export const closeDeleteTableDataModal = createAction(
+  'CLOSE_DELETE_TABLE_DATA_MODAL',
+  (action) => () => action(undefined)
+);
+
 export type TableActions =
   | ReturnType<ValueOf<typeof addColumnAsync>>
+  | ReturnType<ValueOf<typeof getTableDataAsync>>
+  | ReturnType<typeof setRowSelectedIds>
+  | ReturnType<typeof addNewRow>
+  | ReturnType<typeof deleteRow>
   | ReturnType<typeof openAddColumnModal>
   | ReturnType<typeof closeAddColumnModal>
   | ReturnType<typeof unmountAddColumnModal>
@@ -61,4 +109,9 @@ export type TableActions =
   | ReturnType<typeof closeColumnsPopover>
   | ReturnType<typeof showColumn>
   | ReturnType<typeof hideColumn>
-  | ReturnType<typeof reorderColumn>;
+  | ReturnType<typeof reorderColumn>
+  | ReturnType<typeof openPostTableDataModal>
+  | ReturnType<typeof closePostTableDataModal>
+  | ReturnType<typeof unmountPostTableDataModal>
+  | ReturnType<typeof openDeleteTableDataModal>
+  | ReturnType<typeof closeDeleteTableDataModal>;

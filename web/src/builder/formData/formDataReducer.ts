@@ -14,6 +14,7 @@ interface ShortTextFieldData {
     maxLength: boolean;
   };
   isTouched: boolean;
+  key: string;
 }
 
 export type FieldData = BaseFieldData & ShortTextFieldData;
@@ -64,7 +65,7 @@ export const formDataReducer = (
       state.data[action.payload].isTouched = true;
       break;
     }
-    case 'SUBMIT_FORM': {
+    case 'VALIDATE_FIELDS': {
       Object.values(state.elements).forEach((element) => {
         const data = state.data;
         const field = data[element.id];

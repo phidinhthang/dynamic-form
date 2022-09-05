@@ -32,7 +32,6 @@ export const useShowOrHideColumn = (formId: string) => {
 
   const showOrHideColumn = React.useCallback(
     (payload: ShowOrHideColumnPayload) => {
-      console.log('payload ', payload);
       const showColumn = () =>
         tableDispatch(showColumnAction(payload.columnId));
       const hideColumn = () =>
@@ -47,7 +46,6 @@ export const useShowOrHideColumn = (formId: string) => {
       showOrHideColumnApi(formId, payload)
         .then(() => {})
         .catch((err) => {
-          console.log('error ', err);
           // reset column visibility when call api fail
           if (payload.isHidden) {
             showColumn();

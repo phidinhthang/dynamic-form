@@ -14,7 +14,19 @@ interface TableProviderProps extends React.PropsWithChildren {
 
 const TableProvider: React.FC<TableProviderProps> = ({
   children,
-  initialValues = { columns: [] },
+  initialValues = {
+    columns: [],
+    table: {
+      isLoading: false,
+    },
+    selectedRowIds: [],
+    isAddColumnModalMountted: false,
+    isAddColumnModalOpen: false,
+    isColumnsPopoverOpen: false,
+    isPostTableDataModalMountted: false,
+    isPostTableDataModalOpen: false,
+    isDeleteTableDataModalOpen: false,
+  },
 }) => {
   const [state, dispatch] = useImmerReducer(tableReducer, initialValues);
 

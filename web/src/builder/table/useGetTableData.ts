@@ -1,4 +1,6 @@
 import React from 'react';
+import { getTableDataAsync } from './tableActions';
+import { useTableContext } from './TableContext';
 import { TableData } from './types';
 
 const getTableDataApi = (listUrl: string): Promise<TableData> => {
@@ -6,20 +8,18 @@ const getTableDataApi = (listUrl: string): Promise<TableData> => {
 };
 
 export const useGetTableData = (listUrl: string) => {
-  const [state, setState] = React.useState<{
-    isLoading: boolean;
-    data?: TableData;
-    error?: any;
-  }>({
-    isLoading: false,
-  });
+  const [{ table }, tableDispatch] = useTableContext();
 
   React.useEffect(() => {
-    setState({ isLoading: true });
+    tableDispatch(getTableDataAsync.request(undefined));
     getTableDataApi(listUrl)
-      .then((data) => setState({ isLoading: false, data, error: undefined }))
-      .catch((error) => setState({ isLoading: false, data: undefined, error }));
+      .then((data) => {
+        tableDispatch(getTableDataAsync.success(data));
+      })
+      .catch((error) => {
+        tableDispatch(getTableDataAsync.failure(error));
+      });
   }, []);
 
-  return state;
+  return table;
 };

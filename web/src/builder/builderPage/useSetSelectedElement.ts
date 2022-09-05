@@ -12,7 +12,6 @@ export const useSetSelectedElement = () => {
     useBuilderPageContext();
 
   const setSelectedElement = (elementId: string) => {
-    console.log('selected element id ', selectedElementId);
     if (selectedElementId) {
       builderDispatch(setElementTouched(selectedElementId));
     }

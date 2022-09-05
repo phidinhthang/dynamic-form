@@ -47,7 +47,6 @@ export const ShortText: React.FC<ShortTextProps> = ({ element }) => {
       <Input
         id={element.id}
         placeholder={element.data.placeholder}
-        defaultValue={element.data.defaultValue}
         value={data[element.id].value}
         onChange={(e) =>
           formDataDispatch(changeValue(element.id, e.target.value))

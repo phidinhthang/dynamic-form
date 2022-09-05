@@ -11,11 +11,7 @@ export const TablePageProvider: React.FC<TablePageProviderProps> = ({
   const [{ data }] = useFormContext();
 
   if (!data) {
-    return (
-      <BuilderProvider initialValues={initialValues}>
-        {children}
-      </BuilderProvider>
-    );
+    return <>{children}</>;
   }
 
   const elements = Object.entries(data.elements).reduce((acc, [key, value]) => {
@@ -31,6 +27,13 @@ export const TablePageProvider: React.FC<TablePageProviderProps> = ({
           isAddColumnModalMountted: false,
           isAddColumnModalOpen: false,
           isColumnsPopoverOpen: false,
+          isPostTableDataModalMountted: false,
+          isPostTableDataModalOpen: false,
+          selectedRowIds: [],
+          table: {
+            isLoading: false,
+          },
+          isDeleteTableDataModalOpen: false,
         }}
       >
         {children}
