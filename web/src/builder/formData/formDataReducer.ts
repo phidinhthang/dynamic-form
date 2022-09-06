@@ -3,6 +3,7 @@ import { FormDataActions } from './formDataActions';
 import mixin from 'mixin-deep';
 import { validate as validateShortTextField } from '../elements/ShortText/validate';
 import { validate as validateNumberField } from '../elements/Number/validate';
+import { validate as validateSingleChoiceField } from '../elements/SingleChoice/validate';
 
 interface BaseFieldData {
   isTouched: boolean;
@@ -28,9 +29,20 @@ interface NumberFieldData {
   key: string;
 }
 
+interface SingleChoiceData {
+  value?: string;
+  key: string;
+  defaultCheckedId?: string;
+  checkedId?: string;
+  errors: {
+    isRequired: boolean;
+  };
+}
+
 interface AllFieldData {
   SHORT_TEXT: ShortTextFieldData;
   NUMBER: NumberFieldData;
+  SINGLE_CHOICE: SingleChoiceData;
 }
 
 type FieldDataType = keyof AllFieldData;
@@ -62,6 +74,11 @@ export const formDataReducer = (
         validateShortTextField(element, field as ExactFieldData<'SHORT_TEXT'>);
       } else if (element.type === 'NUMBER') {
         validateNumberField(element, field as ExactFieldData<'NUMBER'>);
+      } else if (element.type === 'SINGLE_CHOICE') {
+        validateSingleChoiceField(
+          element,
+          field as ExactFieldData<'SINGLE_CHOICE'>
+        );
       }
       break;
     }
@@ -78,10 +95,22 @@ export const formDataReducer = (
             element,
             field as ExactFieldData<'SHORT_TEXT'>
           );
+        } else if (element.type === 'SINGLE_CHOICE') {
+          validateSingleChoiceField(
+            element,
+            field as ExactFieldData<'SINGLE_CHOICE'>
+          );
         } else if (element.type === 'NUMBER') {
           validateNumberField(element, field as ExactFieldData<'NUMBER'>);
         }
       });
+      break;
+    }
+    case 'SET_SINGLE_CHOICE_CHECKED_OPTION_ID': {
+      const field = state.data[
+        action.payload.elementId
+      ] as ExactFieldData<'SINGLE_CHOICE'>;
+      field.checkedId = action.payload.optionId;
       break;
     }
   }

@@ -76,8 +76,6 @@ export const tableReducer = (state: TableCtx, action: TableActions) => {
     }
 
     case 'SET_ROW_SELECTED_IDS': {
-      console.log('run here ?');
-      console.log(action.payload);
       state.selectedRowIds = action.payload;
       break;
     }

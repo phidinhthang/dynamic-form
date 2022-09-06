@@ -26,6 +26,7 @@ import { useBuilderPageContext } from '../../builderPage/BuilderPageContext';
 import { EditBoxInspector } from '../../elements/EditBox/EditBoxInspector';
 import { NumberInspector } from '../../elements/Number/NumberInspector';
 import { ShortTextInspector } from '../../elements/ShortText/ShortTextInspector';
+import { SingleChoiceInspector } from '../../elements/SingleChoice/SingleChoiceInspector';
 
 interface InspectorProps {
   inspectedElementId?: string;
@@ -86,6 +87,8 @@ export const Inspector: React.FC<InspectorProps> = ({
             <ShortTextInspector element={element} />
           ) : element.type === 'NUMBER' ? (
             <NumberInspector element={element} />
+          ) : element.type === 'SINGLE_CHOICE' ? (
+            <SingleChoiceInspector element={element} />
           ) : (
             <EditBoxInspector />
           )}

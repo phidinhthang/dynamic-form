@@ -36,6 +36,7 @@ import { useGetForm } from '../features/form/useGetForm';
 import { useUpdateForm } from '../features/updateForm/useUpdateForm';
 import { setAllElementTouched } from './builder/builderActions';
 import { HashTagIcon } from '../icons/HashTagIcon';
+import { RadioBtnIcon } from '../icons/RadioBtnIcon';
 
 export const BuilderPage = () => {
   const [{ layout, elements }] = useBuilderContext();
@@ -219,6 +220,12 @@ export const BuilderPage = () => {
           elementType='NUMBER'
         >
           Number
+        </SidebarItem>
+        <SidebarItem
+          icon={<RadioBtnIcon width={30} height={30} />}
+          elementType='SINGLE_CHOICE'
+        >
+          Single Choice
         </SidebarItem>
         <SidebarItem
           icon={<PressIcon width={30} height={30} />}

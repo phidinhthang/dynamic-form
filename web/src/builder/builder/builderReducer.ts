@@ -12,6 +12,9 @@ import { createSubmitButtonElement } from '../elements/SubmitButton/createSubmit
 import { BuilderCtx, BuilderElement, FieldElement } from '../elements/types';
 import { allFieldElementTypes } from '../elements/constants';
 import { createNumberElement } from '../elements/Number/createNumberElement';
+import { createSingleChoiceElement } from '../elements/SingleChoice/createSingleChoiceElement';
+import { SingleChoiceOptionElement } from '../elements/SingleChoice/interface';
+import { nanoid } from 'nanoid';
 
 enablePatches();
 
@@ -23,7 +26,6 @@ export const initialValues: BuilderCtx = {
 const notAllowedActions: BuilderActions['type'][] = [
   'UNDO_CHANGES',
   'REDO_CHANGES',
-  'CHANGE_ELEMENT_DATA',
 ];
 let currentVersion = -1;
 const timeline: Record<string, { redo: Patch[]; undo: Patch[] }> = {};
@@ -77,6 +79,8 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
             element = createSubmitButtonElement({ parentId });
           } else if (type === 'NUMBER') {
             element = createNumberElement({ parentId });
+          } else if (type === 'SINGLE_CHOICE') {
+            element = createSingleChoiceElement({ parentId });
           } else if (type === 'EDIT_BOX') {
             element = createEditBoxElement({ parentId });
           } else {
@@ -197,12 +201,56 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
           break;
         }
 
+        case 'DELETE_SINGLE_CHOICE_OPTION': {
+          const singleChoiceElement =
+            draftState.elements[action.payload.elementId];
+
+          if (
+            singleChoiceElement &&
+            singleChoiceElement.type === 'SINGLE_CHOICE'
+          ) {
+            remove(
+              singleChoiceElement.data.options,
+              (option) => option.id === action.payload.optionId
+            );
+          }
+
+          break;
+        }
+
+        case 'ADD_SINGLE_CHOICE_OPTION': {
+          const singleChoiceOption: SingleChoiceOptionElement = {
+            id: nanoid(),
+            label: '',
+          };
+          const element = draftState.elements[action.payload.elementId];
+
+          if (element?.type === 'SINGLE_CHOICE') {
+            element.data.options.push(singleChoiceOption);
+          }
+
+          break;
+        }
+
+        case 'CHANGE_SINGLE_CHOICE_OPTION_LABEL': {
+          const element = draftState.elements[action.payload.elementId];
+          if (element?.type === 'SINGLE_CHOICE') {
+            const option = element.data.options.find(
+              (option) => option.id === action.payload.optionId
+            );
+            if (option) {
+              option.label = action.payload.label;
+            }
+          }
+
+          break;
+        }
+
         case 'UNDO_CHANGES': {
           const undo = timeline[currentVersion]?.undo;
           if (!undo) return;
           currentVersion--;
-          applyPatches(state, undo);
-          break;
+          return applyPatches(state, undo);
         }
 
         case 'REDO_CHANGES': {
@@ -211,10 +259,9 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
 
           if (!redo) {
             currentVersion--;
-            break;
+            return;
           }
-          applyPatches(state, redo);
-          break;
+          return applyPatches(state, redo);
         }
 
         default: {

@@ -60,6 +60,24 @@ export const deleteElement = createAction(
   (action) => (elementId: string) => action(elementId)
 );
 
+export const deleteSingleChoiceOption = createAction(
+  'DELETE_SINGLE_CHOICE_OPTION',
+  (action) => (elementId: string, optionId: string) =>
+    action({ elementId, optionId })
+);
+
+export const addSingleChoiceOption = createAction(
+  'ADD_SINGLE_CHOICE_OPTION',
+  (action) => (elementId: string) => action({ elementId })
+);
+
+export const changelSingleChoiceOptionLabel = createAction(
+  'CHANGE_SINGLE_CHOICE_OPTION_LABEL',
+  (action) =>
+    (payload: { elementId: string; optionId: string; label: string }) =>
+      action(payload)
+);
+
 export const undoChanges = createAction('UNDO_CHANGES', (action) => action);
 export const redoChanges = createAction('REDO_CHANGES', (action) => action);
 
@@ -73,4 +91,7 @@ export type BuilderActions =
   | ReturnType<typeof redoChanges>
   | ReturnType<typeof changeElementKey>
   | ReturnType<typeof setElementTouched>
-  | ReturnType<typeof setAllElementTouched>;
+  | ReturnType<typeof setAllElementTouched>
+  | ReturnType<typeof deleteSingleChoiceOption>
+  | ReturnType<typeof addSingleChoiceOption>
+  | ReturnType<typeof changelSingleChoiceOptionLabel>;

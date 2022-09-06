@@ -14,6 +14,8 @@ import { EditEditBox } from '../elements/EditBox/EditEditBox';
 import { TableRow } from '../table/types';
 import { Number } from '../elements/Number/Number';
 import { EditNumber } from '../elements/Number/EditNumber';
+import { EditSingleChoice } from '../elements/SingleChoice/EditSingleChoice';
+import { SingleChoice } from '../elements/SingleChoice/SingleChoice';
 
 interface GenFormProps {
   mode?: 'preview' | 'edit';
@@ -33,7 +35,13 @@ const recursiveRenderForm = (
           if (inEditMode) {
             return (
               <SortableItem
-                accept={['EDIT_BOX', 'SHORT_TEXT', 'SUBMIT_BUTTON', 'NUMBER']}
+                accept={[
+                  'EDIT_BOX',
+                  'SHORT_TEXT',
+                  'SUBMIT_BUTTON',
+                  'NUMBER',
+                  'SINGLE_CHOICE',
+                ]}
                 id={element.id}
                 parentId={element.parentId}
                 type='SHORT_TEXT'
@@ -51,7 +59,13 @@ const recursiveRenderForm = (
           if (inEditMode) {
             return (
               <SortableItem
-                accept={['EDIT_BOX', 'SHORT_TEXT', 'SUBMIT_BUTTON', 'NUMBER']}
+                accept={[
+                  'EDIT_BOX',
+                  'SHORT_TEXT',
+                  'SUBMIT_BUTTON',
+                  'NUMBER',
+                  'SINGLE_CHOICE',
+                ]}
                 id={element.id}
                 parentId={element.parentId}
                 index={index}
@@ -70,7 +84,13 @@ const recursiveRenderForm = (
           if (inEditMode) {
             return (
               <SortableItem
-                accept={['EDIT_BOX', 'SHORT_TEXT', 'SUBMIT_BUTTON', 'NUMBER']}
+                accept={[
+                  'EDIT_BOX',
+                  'SHORT_TEXT',
+                  'SUBMIT_BUTTON',
+                  'NUMBER',
+                  'SINGLE_CHOICE',
+                ]}
                 id={element.id}
                 parentId={element.parentId}
                 index={index}
@@ -85,6 +105,30 @@ const recursiveRenderForm = (
           }
 
           return <Number element={element} />;
+        } else if (element.type === 'SINGLE_CHOICE') {
+          if (inEditMode) {
+            return (
+              <SortableItem
+                accept={[
+                  'EDIT_BOX',
+                  'SHORT_TEXT',
+                  'SUBMIT_BUTTON',
+                  'NUMBER',
+                  'SINGLE_CHOICE',
+                ]}
+                id={element.id}
+                parentId={element.parentId}
+                index={index}
+                key={element.id}
+                type='SINGLE_CHOICE'
+              >
+                <EdittableWrapper element={element}>
+                  <EditSingleChoice element={element} />
+                </EdittableWrapper>
+              </SortableItem>
+            );
+          }
+          return <SingleChoice element={element} />;
         } else if (element.type === 'EDIT_BOX') {
           const editBoxChildren = (
             <>
@@ -96,7 +140,13 @@ const recursiveRenderForm = (
           );
           return inEditMode ? (
             <SortableItem
-              accept={['EDIT_BOX', 'SHORT_TEXT', 'SUBMIT_BUTTON', 'NUMBER']}
+              accept={[
+                'EDIT_BOX',
+                'SHORT_TEXT',
+                'SUBMIT_BUTTON',
+                'NUMBER',
+                'SINGLE_CHOICE',
+              ]}
               id={element.id}
               parentId={element.parentId}
               type='EDIT_BOX'
@@ -129,7 +179,13 @@ export const GenForm: React.FC<GenFormProps> = ({
   return inEditMode ? (
     <Box px={4} w='full'>
       <DroppableItem
-        accept={['EDIT_BOX', 'SHORT_TEXT', 'SUBMIT_BUTTON', 'NUMBER']}
+        accept={[
+          'EDIT_BOX',
+          'SHORT_TEXT',
+          'SUBMIT_BUTTON',
+          'NUMBER',
+          'SINGLE_CHOICE',
+        ]}
         id='root'
         w='full'
         h='full'

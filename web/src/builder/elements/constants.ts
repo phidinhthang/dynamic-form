@@ -3,6 +3,7 @@ import { FieldElementType, ElementType } from './types';
 export const allFieldElementTypes: FieldElementType[] = [
   'SHORT_TEXT',
   'NUMBER',
+  'SINGLE_CHOICE',
 ];
 
 export const allBuilderElementTypes: ElementType[] = [
@@ -10,4 +11,5 @@ export const allBuilderElementTypes: ElementType[] = [
   'SHORT_TEXT',
   'SUBMIT_BUTTON',
   'NUMBER',
+  'SINGLE_CHOICE',
 ];

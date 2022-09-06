@@ -25,8 +25,15 @@ export const validateFields = createAction(
   (action) => () => action(undefined)
 );
 
+export const setSingleChoiceCheckedOptionId = createAction(
+  'SET_SINGLE_CHOICE_CHECKED_OPTION_ID',
+  (action) => (elementId: string, optionId: string) =>
+    action({ optionId, elementId })
+);
+
 export type FormDataActions =
   | ReturnType<typeof changeData>
   | ReturnType<typeof changeValue>
   | ReturnType<typeof validateFields>
-  | ReturnType<typeof setTouched>;
+  | ReturnType<typeof setTouched>
+  | ReturnType<typeof setSingleChoiceCheckedOptionId>;
