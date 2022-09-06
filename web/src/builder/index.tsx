@@ -35,6 +35,7 @@ import { useRouter } from 'next/router';
 import { useGetForm } from '../features/form/useGetForm';
 import { useUpdateForm } from '../features/updateForm/useUpdateForm';
 import { setAllElementTouched } from './builder/builderActions';
+import { HashTagIcon } from '../icons/HashTagIcon';
 
 export const BuilderPage = () => {
   const [{ layout, elements }] = useBuilderContext();
@@ -212,6 +213,12 @@ export const BuilderPage = () => {
           elementType='SHORT_TEXT'
         >
           Short Text
+        </SidebarItem>
+        <SidebarItem
+          icon={<HashTagIcon width={30} height={30} />}
+          elementType='NUMBER'
+        >
+          Number
         </SidebarItem>
         <SidebarItem
           icon={<PressIcon width={30} height={30} />}

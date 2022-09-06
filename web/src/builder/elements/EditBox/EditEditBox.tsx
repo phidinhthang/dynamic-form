@@ -1,10 +1,10 @@
 import { Box } from '@chakra-ui/react';
-import { BuilderElement } from '../types';
+import { BuilderElement, ExactBuilderElement } from '../types';
 import { DroppableItem } from '../../layout/mainPanel/DroppableItem';
 import { SortableItem } from '../../layout/mainPanel/SortableItem';
 
 interface EditEditBoxProps extends React.PropsWithChildren {
-  element: BuilderElement;
+  element: ExactBuilderElement<'EDIT_BOX'>;
   index: number;
 }
 
@@ -17,7 +17,7 @@ export const EditEditBox: React.FC<EditEditBoxProps> = ({
     <DroppableItem
       my={1}
       px={2}
-      accept={['SHORT_TEXT']}
+      accept={['SHORT_TEXT', 'NUMBER']}
       id={element.id}
       renderOnActive={(isActive) =>
         isActive ? (

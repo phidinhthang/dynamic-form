@@ -1,5 +1,6 @@
 import { createAction } from '../../utils/createAction';
 import { DeepPartial } from '../../utils/types/DeepPartial';
+import { Primitive } from '../../utils/types/Primitive';
 import { FieldData, FormDataCtx } from './formDataReducer';
 
 export const changeData = createAction(
@@ -10,7 +11,8 @@ export const changeData = createAction(
 
 export const changeValue = createAction(
   'CHANGE_VALUE',
-  (action) => (elementId: string, value: string) => action({ elementId, value })
+  (action) => (elementId: string, value: Primitive) =>
+    action({ elementId, value })
 );
 
 export const setTouched = createAction(

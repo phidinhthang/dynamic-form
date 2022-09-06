@@ -1,6 +1,7 @@
 import { ShortTextElement } from './ShortText/interface';
 import { EditBoxElement } from './EditBox/interface';
 import { SubmitButtonElement } from './SubmitButton/interface';
+import { NumberElement } from './Number/interface';
 
 export type ElementBuildError = {
   errorKey: string;
@@ -19,6 +20,7 @@ export type AllBuilderElement = {
   SHORT_TEXT: ShortTextElement;
   EDIT_BOX: EditBoxElement;
   SUBMIT_BUTTON: SubmitButtonElement;
+  NUMBER: NumberElement;
 };
 
 export type ElementType = keyof AllBuilderElement;

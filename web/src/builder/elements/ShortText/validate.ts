@@ -1,9 +1,9 @@
-import { FieldData } from '../../formData/formDataReducer';
+import { ExactFieldData, FieldData } from '../../formData/formDataReducer';
 import { ExactBuilderElement } from '../types';
 
 export const validate = (
   element: ExactBuilderElement<'SHORT_TEXT'>,
-  field: FieldData
+  field: ExactFieldData<'SHORT_TEXT'>
 ) => {
   const validations = element.data.validations;
   if (validations.isRequired.value === true && !field.value) {

@@ -3,7 +3,11 @@ import { useImmerReducer } from 'use-immer';
 import { createContext } from '../../utils/createContext';
 import { BuilderCtx } from '../elements/types';
 import { FormDataActions } from './formDataActions';
-import { FormDataCtx, formDataReducer } from './formDataReducer';
+import {
+  ExactFieldData,
+  FormDataCtx,
+  formDataReducer,
+} from './formDataReducer';
 
 export const [Provider, useFormDataContext] = createContext<
   [FormDataCtx, React.Dispatch<FormDataActions>]
@@ -20,12 +24,28 @@ export const FormDataProvider: React.FC<FormDataProviderProps> = ({
   const data = React.useMemo(() => {
     const data: FormDataCtx['data'] = {};
     Object.values(value.elements).forEach((element) => {
-      data[element.id] = {
-        errors: { isRequired: false, maxLength: false, minLength: false },
-        isTouched: false,
-        key: (element.data as any)?.key,
-        value: (element.data as any)?.defaultValue,
-      };
+      if (element.type === 'SHORT_TEXT') {
+        (data[element.id] as ExactFieldData<'SHORT_TEXT'>) = {
+          errors: { isRequired: false, maxLength: false, minLength: false },
+          isTouched: false,
+          key: element.data.key,
+          value: element.data.defaultValue,
+        };
+      } else if (element.type === 'NUMBER') {
+        (data[element.id] as ExactFieldData<'NUMBER'>) = {
+          errors: { isRequired: false, max: false, min: false },
+          isTouched: false,
+          key: element.data.key,
+          value: element.data.defaultValue,
+        };
+      } else {
+        // @ts-ignore
+        data[element.id] = {
+          // @ts-ignore
+          errors: {},
+          isTouched: false,
+        };
+      }
     });
     return data;
   }, [value]);

@@ -37,13 +37,27 @@ export const PostTableDataModal: React.FC<PostTableDataModalProps> = () => {
       isOpen={isPostTableDataModalOpen}
       onClose={closeModal}
       onCloseComplete={unmountModal}
-      size='xl'
+      size='2xl'
+      scrollBehavior='inside'
     >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent pb={12}>
         <ModalCloseButton />
         <ModalHeader>Post table data</ModalHeader>
-        <ModalBody pb={6}>
+        <ModalBody
+          css={() => ({
+            '&::-webkit-scrollbar': {
+              width: '12px',
+            },
+            '&::-webkit-scrollbar-track': {
+              width: '10px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#afafaf',
+              borderRadius: '24px',
+            },
+          })}
+        >
           <GenForm
             data={{ elements, layout }}
             onSubmit={(row) => {

@@ -4,35 +4,40 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
 } from '@chakra-ui/react';
-import { ExactBuilderElement } from '../types';
 import { changeValue, setTouched } from '../../formData/formDataActions';
 import { useFormDataContext } from '../../formData/FormDataContext';
 import { ExactFieldData } from '../../formData/formDataReducer';
+import { ExactBuilderElement } from '../types';
 
-interface ShortTextProps {
-  element: ExactBuilderElement<'SHORT_TEXT'>;
+interface NumberProps {
+  element: ExactBuilderElement<'NUMBER'>;
 }
 
-export const ShortText: React.FC<ShortTextProps> = ({ element }) => {
+export const Number: React.FC<NumberProps> = ({ element }) => {
   const [{ data }, formDataDispatch] = useFormDataContext();
 
-  const { isRequired, maxLength, minLength } = data[element.id]
-    .errors as ExactFieldData<'SHORT_TEXT'>['errors'];
-  const hasError = isRequired || maxLength || minLength;
+  const { isRequired, max, min } = data[element.id]
+    .errors as ExactFieldData<'NUMBER'>['errors'];
+  const hasError = isRequired || max || min;
   const validations = element.data.validations;
   const requiredErrMsg = validations.isRequired.errorMessage;
-  const minLengthErrMsg = validations.minLength.errorMessage;
-  const maxLengthErrMsg = validations.maxLength.errorMessage;
+  const minErrMsg = validations.min.errorMessage;
+  const maxErrMsg = validations.max.errorMessage;
 
   const isTouched = data[element.id].isTouched;
   const errorText = isTouched
     ? isRequired
       ? requiredErrMsg
-      : minLength
-      ? minLengthErrMsg
-      : maxLength
-      ? maxLengthErrMsg
+      : min
+      ? minErrMsg
+      : max
+      ? maxErrMsg
       : ''
     : '';
 
@@ -46,15 +51,21 @@ export const ShortText: React.FC<ShortTextProps> = ({ element }) => {
       <FormLabel htmlFor={element.id} fontSize={18} mb={2} mt={1}>
         {element.data.label}
       </FormLabel>
-      <Input
+      <NumberInput
         id={element.id}
         placeholder={element.data.placeholder}
         value={data[element.id].value}
-        onChange={(e) =>
-          formDataDispatch(changeValue(element.id, e.target.value))
+        onChange={(_, value) =>
+          formDataDispatch(changeValue(element.id, isNaN(value) ? '' : value))
         }
         onBlur={() => formDataDispatch(setTouched(element.id))}
-      />
+      >
+        <NumberInputField />
+        <NumberInputStepper>
+          <NumberIncrementStepper />
+          <NumberDecrementStepper />
+        </NumberInputStepper>
+      </NumberInput>
       <FormHelperText my={1}>{element.data.subLabel}</FormHelperText>
       {errorText && <FormErrorMessage my={1}>{errorText}</FormErrorMessage>}
     </FormControl>

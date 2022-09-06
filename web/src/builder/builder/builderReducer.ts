@@ -9,23 +9,11 @@ import { remove } from '../../utils/remove';
 import { createShortTextElement } from '../elements/ShortText/createShortTextElement';
 import { createEditBoxElement } from '../elements/EditBox/createEditBoxElement';
 import { createSubmitButtonElement } from '../elements/SubmitButton/createSubmitButtonElement';
-import {
-  FieldElementType,
-  ElementType,
-  BuilderCtx,
-  BuilderElement,
-  FieldElement,
-} from '../elements/types';
+import { BuilderCtx, BuilderElement, FieldElement } from '../elements/types';
+import { allFieldElementTypes } from '../elements/constants';
+import { createNumberElement } from '../elements/Number/createNumberElement';
 
 enablePatches();
-
-export const allFieldElementTypes: FieldElementType[] = ['SHORT_TEXT'];
-
-export const allBuilderElementTypes: ElementType[] = [
-  'EDIT_BOX',
-  'SHORT_TEXT',
-  'SUBMIT_BUTTON',
-];
 
 export const initialValues: BuilderCtx = {
   elements: {},
@@ -85,10 +73,14 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
           let element: BuilderElement;
           if (type === 'SHORT_TEXT') {
             element = createShortTextElement({ parentId });
+          } else if (type === 'SUBMIT_BUTTON') {
+            element = createSubmitButtonElement({ parentId });
+          } else if (type === 'NUMBER') {
+            element = createNumberElement({ parentId });
           } else if (type === 'EDIT_BOX') {
             element = createEditBoxElement({ parentId });
           } else {
-            element = createSubmitButtonElement({ parentId });
+            throw new Error('Element type not found.');
           }
           draftState.elements[element.id] = element;
           if (parentId === 'root') {

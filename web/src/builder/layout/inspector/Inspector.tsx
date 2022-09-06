@@ -24,6 +24,7 @@ import { useBuilderContext } from '../../builder/BuilderContext';
 import { clearInspectElementId } from '../../builderPage/builderPageActions';
 import { useBuilderPageContext } from '../../builderPage/BuilderPageContext';
 import { EditBoxInspector } from '../../elements/EditBox/EditBoxInspector';
+import { NumberInspector } from '../../elements/Number/NumberInspector';
 import { ShortTextInspector } from '../../elements/ShortText/ShortTextInspector';
 
 interface InspectorProps {
@@ -83,6 +84,8 @@ export const Inspector: React.FC<InspectorProps> = ({
         <Box maxH='100%' overflowY='auto' overflowX='hidden'>
           {element.type === 'SHORT_TEXT' ? (
             <ShortTextInspector element={element} />
+          ) : element.type === 'NUMBER' ? (
+            <NumberInspector element={element} />
           ) : (
             <EditBoxInspector />
           )}

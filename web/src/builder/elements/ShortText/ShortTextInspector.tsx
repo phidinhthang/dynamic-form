@@ -42,7 +42,7 @@ export const ShortTextInspector: React.FC<ShortTextInspectorProps> = ({
         <TabPanel mx={-1}>
           <Box>
             <FormControl>
-              <FormLabel>Question Text</FormLabel>
+              <FormLabel>Label</FormLabel>
               <Input
                 value={element.data.label}
                 onChange={(e) => {
@@ -54,7 +54,7 @@ export const ShortTextInspector: React.FC<ShortTextInspectorProps> = ({
                   );
                 }}
               />
-              <FormHelperText>Type your question</FormHelperText>
+              <FormHelperText>Type your label</FormHelperText>
             </FormControl>
             <FormControl mt={8}>
               <FormLabel>Required</FormLabel>

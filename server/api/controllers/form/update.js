@@ -6,7 +6,7 @@ module.exports = async function update(req, res) {
   let columns = form.columns;
 
   const fieldElements = Object.values(elements).filter(
-    (e) => e.type === "SHORT_TEXT"
+    (e) => e.type === "SHORT_TEXT" || e.type === "NUMBER"
   );
 
   fieldElements.forEach((element) => {
@@ -14,7 +14,7 @@ module.exports = async function update(req, res) {
 
     if (!hasIncluded) {
       columns.push({
-        type: "SHORT_TEXT",
+        type: element.type,
         id: element.id,
         label: element.data.label,
         key: element.data.key,

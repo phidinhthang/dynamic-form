@@ -2,6 +2,7 @@ import { BuilderCtx } from '../elements/types';
 import { FormDataActions } from './formDataActions';
 import mixin from 'mixin-deep';
 import { validate as validateShortTextField } from '../elements/ShortText/validate';
+import { validate as validateNumberField } from '../elements/Number/validate';
 
 interface BaseFieldData {
   isTouched: boolean;
@@ -14,11 +15,30 @@ interface ShortTextFieldData {
     minLength: boolean;
     maxLength: boolean;
   };
-  isTouched: boolean;
   key: string;
 }
 
-export type FieldData = BaseFieldData & ShortTextFieldData;
+interface NumberFieldData {
+  value?: number;
+  errors: {
+    isRequired: boolean;
+    min: boolean;
+    max: boolean;
+  };
+  key: string;
+}
+
+interface AllFieldData {
+  SHORT_TEXT: ShortTextFieldData;
+  NUMBER: NumberFieldData;
+}
+
+type FieldDataType = keyof AllFieldData;
+
+export type FieldData = AllFieldData[FieldDataType] & BaseFieldData;
+
+export type ExactFieldData<T extends FieldDataType> = AllFieldData[T] &
+  BaseFieldData;
 
 export interface FormDataCtx extends BuilderCtx {
   data: Record<string, FieldData>;
@@ -39,7 +59,9 @@ export const formDataReducer = (
       const element = state.elements[elementId];
       const field = state.data[element.id];
       if (element.type === 'SHORT_TEXT') {
-        validateShortTextField(element, field);
+        validateShortTextField(element, field as ExactFieldData<'SHORT_TEXT'>);
+      } else if (element.type === 'NUMBER') {
+        validateNumberField(element, field as ExactFieldData<'NUMBER'>);
       }
       break;
     }
@@ -52,7 +74,12 @@ export const formDataReducer = (
         const field = state.data[element.id];
         field.isTouched = true;
         if (element.type === 'SHORT_TEXT') {
-          validateShortTextField(element, field);
+          validateShortTextField(
+            element,
+            field as ExactFieldData<'SHORT_TEXT'>
+          );
+        } else if (element.type === 'NUMBER') {
+          validateNumberField(element, field as ExactFieldData<'NUMBER'>);
         }
       });
       break;
