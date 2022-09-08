@@ -45,6 +45,7 @@ export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
           display='flex'
           flexDir='column'
           gap={1}
+          zIndex={100}
         >
           <IconButton
             icon={<SettingsIcon />}

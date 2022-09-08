@@ -1,16 +1,16 @@
 import { nanoid } from 'nanoid';
 import { ExactBuilderElement } from '../types';
-import { EditBoxElement } from './interface';
+import { RowElement } from './interface';
 
-export const createEditBoxElement = ({
+export const createRowElement = ({
   parentId,
 }: {
   parentId: string;
-}): ExactBuilderElement<'EDIT_BOX'> => {
+}): ExactBuilderElement<'ROW'> => {
   return {
     id: nanoid(),
     parentId,
-    type: 'EDIT_BOX',
+    type: 'ROW',
     buildErrors: [],
     children: [],
     data: {},

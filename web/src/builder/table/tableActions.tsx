@@ -2,7 +2,7 @@ import { TableColumn } from '../../features/forms/types';
 import { createAction } from '../../utils/createAction';
 import { createAsyncAction } from '../../utils/createAsyncAction';
 import { ValueOf } from '../../utils/types/ValueOf';
-import { TableData, TableRow } from './types';
+import { PaginationResponse, TableData, TableRow } from './types';
 
 export interface ShowOrHideColumnPayload {
   columnId: string;
@@ -11,7 +11,7 @@ export interface ShowOrHideColumnPayload {
 
 export const getTableDataAsync = createAsyncAction('GET_TABLE_DATA')<
   undefined,
-  TableData,
+  PaginationResponse<TableRow>,
   any
 >();
 

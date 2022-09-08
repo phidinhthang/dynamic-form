@@ -1,5 +1,5 @@
 import { ShortTextElement } from './ShortText/interface';
-import { EditBoxElement } from './EditBox/interface';
+import { RowElement } from './Row/interface';
 import { SubmitButtonElement } from './SubmitButton/interface';
 import { NumberElement } from './Number/interface';
 import { SingleChoiceElement } from './SingleChoice/interface';
@@ -19,7 +19,7 @@ export interface BaseBuilderElement {
 
 export type AllBuilderElement = {
   SHORT_TEXT: ShortTextElement;
-  EDIT_BOX: EditBoxElement;
+  ROW: RowElement;
   SUBMIT_BUTTON: SubmitButtonElement;
   NUMBER: NumberElement;
   SINGLE_CHOICE: SingleChoiceElement;

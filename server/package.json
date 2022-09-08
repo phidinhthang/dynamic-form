@@ -8,6 +8,7 @@
     "@sailshq/lodash": "^3.10.3",
     "dotenv": "^16.0.1",
     "sails": "^1.5.3",
+    "sails-hook-custom-blueprints": "^1.0.0",
     "sails-hook-orm": "^4.0.0",
     "sails-hook-sockets": "^2.0.0",
     "sails-mongo": "^2.0.0"

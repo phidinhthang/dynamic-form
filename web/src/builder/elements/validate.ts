@@ -10,6 +10,6 @@ export const validate = (elements: BuilderElement[]) => {
   const errors: BuilderElementError[] = [];
 
   elements.forEach((element) => {
-    if (element.type === 'EDIT_BOX') return;
+    if (element.type === 'ROW') return;
   });
 };

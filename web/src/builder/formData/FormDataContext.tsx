@@ -38,6 +38,21 @@ export const FormDataProvider: React.FC<FormDataProviderProps> = ({
           key: element.data.key,
           value: element.data.defaultValue,
         };
+      } else if (element.type === 'SINGLE_CHOICE') {
+        (data[element.id] as ExactFieldData<'SINGLE_CHOICE'>) = {
+          errors: { isRequired: false },
+          isTouched: false,
+          key: element.data.key,
+          defaultCheckedId: element.data.defaultSelectedId,
+          value: element.data.defaultSelectedId
+            ? element.data.options?.find(
+                (option) => element.data.defaultSelectedId === option.id
+              )?.value ||
+              element.data.options?.find(
+                (option) => element.data.defaultSelectedId === option.id
+              )?.label
+            : undefined,
+        };
       } else {
         // @ts-ignore
         data[element.id] = {

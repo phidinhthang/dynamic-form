@@ -1,12 +1,12 @@
 import { TableColumn } from '../../features/forms/types';
 import { remove } from '../../utils/remove';
 import { TableActions } from './tableActions';
-import { TableData } from './types';
+import { PaginationResponse, TableData, TableRow } from './types';
 
 export interface TableCtx {
   columns: TableColumn[];
   table: {
-    data?: TableData;
+    data?: PaginationResponse<TableRow>;
     isLoading: boolean;
     error?: any;
   };
@@ -53,12 +53,12 @@ export const tableReducer = (state: TableCtx, action: TableActions) => {
     }
 
     case 'ADD_NEW_ROW': {
-      state.table.data?.push(action.payload);
+      state.table.data?.data.push(action.payload);
       break;
     }
 
     case 'DELETE_ROW': {
-      remove(state.table.data || [], (row) => row.id === action.payload);
+      remove(state.table.data?.data || [], (row) => row.id === action.payload);
       remove(state.selectedRowIds, (rowId) => rowId === action.payload);
       break;
     }

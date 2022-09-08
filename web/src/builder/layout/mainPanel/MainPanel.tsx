@@ -23,7 +23,12 @@ export const MainPanel: React.FC<MainPanelProps> = ({
 }) => {
   return (
     <motion.div
-      style={{ backgroundColor: '#f9f9f9', height: '100vh' }}
+      style={{
+        backgroundColor: '#f9f9f9',
+        height: '100%',
+        minHeight: '100vh',
+        paddingBottom: '32px',
+      }}
       animate={isSidebarOpen ? 'sidebarOpen' : 'sidebarClose'}
       variants={variants}
       transition={{ ease: 'linear' }}

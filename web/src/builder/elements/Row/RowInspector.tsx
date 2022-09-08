@@ -8,11 +8,11 @@ import {
 } from '@chakra-ui/react';
 import { ExactBuilderElement } from '../types';
 
-interface EditBoxInspectorProps {
-  element: ExactBuilderElement<'SHORT_TEXT'>;
+interface RowInspectorProps {
+  element: ExactBuilderElement<'ROW'>;
 }
 
-export const EditBoxInspector = () => {
+export const RowInspector = () => {
   return (
     <Tabs isFitted>
       <TabList>

@@ -7,7 +7,7 @@ export const allFieldElementTypes: FieldElementType[] = [
 ];
 
 export const allBuilderElementTypes: ElementType[] = [
-  'EDIT_BOX',
+  'ROW',
   'SHORT_TEXT',
   'SUBMIT_BUTTON',
   'NUMBER',

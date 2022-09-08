@@ -1,5 +1,5 @@
 import { DndProvider } from 'react-dnd';
-import { BuilderPage } from '../../../builder';
+import { BuilderPage } from '../../../builder/BuilderPage';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { BuilderPageProvider } from '../../../builder/builderPage/BuilderPageContext';
 import { FormProvider } from '../../../features/form/FormContext';

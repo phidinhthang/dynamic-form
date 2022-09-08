@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  IconButton,
   Input,
   Select,
   Table,
@@ -32,8 +33,15 @@ import {
   setRowSelectedIds,
 } from './tableActions';
 import { ColumnsPopover } from './ColumnsPopover';
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import {
+  AddIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  DeleteIcon,
+} from '@chakra-ui/icons';
 import { TableRow } from './types';
+import { DOTS, usePagination } from '../../shared-hooks/usePagination';
+import { DotsIcon } from '../../icons/DotsIcon';
 
 interface DataTableProps {
   listUrl: string;
@@ -41,7 +49,9 @@ interface DataTableProps {
 }
 
 export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
-  const { data } = useGetTableData(listUrl);
+  const [currPage, setCurrentPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(2);
+  const { data } = useGetTableData(listUrl, { limit, page: currPage });
   const [{ columns, selectedRowIds }, tableDispatch] = useTableContext();
   const [{ elements }, formDispatch] = useFormDataContext();
 
@@ -57,7 +67,7 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
   }, [columns]);
 
   const table = useReactTable<TableRow>({
-    data: data as any,
+    data: data?.data || [],
     columns: headers as any,
     state: { rowSelection },
     getCoreRowModel: getCoreRowModel(),
@@ -71,11 +81,24 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
     getRowId: (row) => row.id as string,
   });
 
-  const onOpenAddColumnModal = () => tableDispatch(openAddColumnModal());
+  const {
+    currentPage,
+    range,
+    firstPage,
+    lastPage,
+    nextPage,
+    previousPage,
+    setPage,
+  } = usePagination({
+    currentPage: currPage,
+    total: data?.paging?.total,
+    onPageChange: (page) => {
+      setCurrentPage(page);
+      tableDispatch(setRowSelectedIds([]));
+    },
+  });
 
-  if (!data) {
-    return <div>loading...</div>;
-  }
+  const onOpenAddColumnModal = () => tableDispatch(openAddColumnModal());
 
   return (
     <Box>
@@ -88,7 +111,9 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
             bg='blue.50'
           >
             {columns.map((column) => (
-              <option value={column.key}>{column.label}</option>
+              <option value={column.key} key={column.id}>
+                {column.label}
+              </option>
             ))}
           </Select>
           <Input />
@@ -120,7 +145,7 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
           <ColumnsPopover columns={columns} formId={formId} />
         </Box>
       </Box>
-      <Box bg='#F3F3FE' borderY='1px solid #c3cad8'>
+      <Box bg='#F3F3FE' borderY='1px solid #c3cad8' h='calc(100vh - 100px)'>
         <TableContainer
           w='fit-content'
           h='full'
@@ -256,6 +281,82 @@ export const DataTable: React.FC<DataTableProps> = ({ listUrl, formId }) => {
             </Tbody>
           </Table>
         </TableContainer>
+      </Box>
+      <Box
+        px={2}
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+        h='44px'
+      >
+        <Box></Box>
+        <Box display='flex' gap={5}>
+          <Box>
+            <Select
+              size='sm'
+              rounded='md'
+              onChange={(e) => {
+                setLimit(parseInt(e.target.value));
+                setCurrentPage(1);
+              }}
+              value={limit}
+            >
+              {[2, 5, 10, 20].map((limit) => (
+                <option value={limit} key={limit}>
+                  {limit} per page
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Box display='flex' gap={2} alignItems='center'>
+            <IconButton
+              size='sm'
+              icon={<ChevronLeftIcon />}
+              aria-label='go prev button'
+              colorScheme='blue'
+              variant='outline'
+              disabled={currentPage === 1}
+              onClick={() => previousPage()}
+            ></IconButton>
+            {range.map((item, index) => {
+              if (item === DOTS) {
+                return (
+                  <Box
+                    w={8}
+                    h={8}
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='center'
+                  >
+                    <DotsIcon />
+                  </Box>
+                );
+              } else {
+                return (
+                  <Button
+                    key={index}
+                    w={8}
+                    h={8}
+                    onClick={() => setPage(item)}
+                    variant={item === currentPage ? 'solid' : 'outline'}
+                    colorScheme='blue'
+                  >
+                    {item}
+                  </Button>
+                );
+              }
+            })}
+            <IconButton
+              size='sm'
+              icon={<ChevronRightIcon />}
+              aria-label='go next button'
+              colorScheme='blue'
+              variant='outline'
+              onClick={() => nextPage()}
+              disabled={data?.paging.total === currentPage}
+            ></IconButton>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

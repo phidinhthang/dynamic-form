@@ -3,11 +3,13 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Portal,
   Switch,
   Text,
   ToastId,
   useToast,
 } from '@chakra-ui/react';
+import {} from 'next/link';
 import { useBuilderContext } from './builder/BuilderContext';
 import React from 'react';
 import { SidebarItem } from './layout/sidebar/SidebarItem';
@@ -37,6 +39,8 @@ import { useUpdateForm } from '../features/updateForm/useUpdateForm';
 import { setAllElementTouched } from './builder/builderActions';
 import { HashTagIcon } from '../icons/HashTagIcon';
 import { RadioBtnIcon } from '../icons/RadioBtnIcon';
+import { NavLink } from '../components/NavLink';
+import { RowIcon } from '../icons/RowIcon';
 
 export const BuilderPage = () => {
   const [{ layout, elements }] = useBuilderContext();
@@ -129,7 +133,7 @@ export const BuilderPage = () => {
     listify(
       group(
         Object.values(elements)
-          .filter((element) => element.type !== 'EDIT_BOX')
+          .filter((element) => element.type !== 'ROW')
           .filter((element) => !!(element.data as any).key),
         (element: any) => element.data.key
       ),
@@ -194,95 +198,153 @@ export const BuilderPage = () => {
 
   return (
     <Box>
-      <Sidebar
-        isSidebarOpen={isSidebarOpen}
-        openSidebar={() => {
-          builderPageDispatch({ type: 'OPEN_SIDEBAR', payload: undefined });
-        }}
-        closeSidebar={() => {
-          builderPageDispatch({ type: 'CLOSE_SIDEBAR', payload: undefined });
-        }}
-      >
-        <SidebarItem
-          icon={<BoxIcon width={30} height={30} />}
-          elementType='EDIT_BOX'
-        >
-          Edit Box
-        </SidebarItem>
-        <SidebarItem
-          icon={<TextIcon width={30} height={30} />}
-          elementType='SHORT_TEXT'
-        >
-          Short Text
-        </SidebarItem>
-        <SidebarItem
-          icon={<HashTagIcon width={30} height={30} />}
-          elementType='NUMBER'
-        >
-          Number
-        </SidebarItem>
-        <SidebarItem
-          icon={<RadioBtnIcon width={30} height={30} />}
-          elementType='SINGLE_CHOICE'
-        >
-          Single Choice
-        </SidebarItem>
-        <SidebarItem
-          icon={<PressIcon width={30} height={30} />}
-          elementType='SUBMIT_BUTTON'
-        >
-          Submit Button
-        </SidebarItem>
-      </Sidebar>
-
-      <MainPanel isSidebarOpen={isSidebarOpen}>
+      <Portal>
         <Box
+          w='full'
+          h='40px'
+          bg='twitter.500'
           display='flex'
-          gap={8}
           justifyContent='center'
-          alignItems='center'
-          mb={5}
-          pt={5}
+          position='fixed'
+          top='0'
+          left='0'
+          right='0'
         >
-          <Button
-            onClick={() => {
-              if (hasError) {
-                builderDispatch(setAllElementTouched());
-              } else {
-                updateForm(formId, { layout, elements }).then(console.log);
-              }
-            }}
-            leftIcon={<SaveIcon width={24} height={24} />}
-            isLoading={isLoading}
-          >
-            Save
-          </Button>
-          <FormControl
-            display='inline-flex'
-            w='fit-content'
-            alignItems='center'
-          >
-            <FormLabel htmlFor='form-preview-toggler' mb='0'>
-              Preview mode:
-            </FormLabel>
-            <Switch
-              id='form-preview-toggler'
-              size='lg'
-              isChecked={!inEditMode}
-              onChange={() =>
-                builderPageDispatch(toggleFormPreviewMode(undefined))
-              }
-            />
-          </FormControl>
+          <Box display='inline-flex'>
+            <NavLink
+              to={`/forms/${formId}/edit`}
+              color='white'
+              fontWeight='semibold'
+              fontSize='lg'
+              h='full'
+              display='flex'
+              alignItems='center'
+              justifyContent='center'
+              letterSpacing={0.3}
+              textTransform='uppercase'
+              px={4}
+              _hover={{ bg: 'twitter.400' }}
+              activeProps={{ bg: 'twitter.400' }}
+            >
+              Build
+            </NavLink>
+            <NavLink
+              to={`/forms/${formId}/setting`}
+              color='white'
+              fontWeight='semibold'
+              fontSize='lg'
+              display='flex'
+              alignItems='center'
+              justifyContent='center'
+              letterSpacing={0.3}
+              textTransform='uppercase'
+              px={4}
+              _hover={{ bg: 'twitter.400' }}
+              activeProps={{ bg: 'twitter.400' }}
+            >
+              Setting
+            </NavLink>
+          </Box>
         </Box>
-        <Box rounded='md' shadow='sm' bg='white' w='full' maxW={800} mx='auto'>
-          <GenForm
-            data={{ elements, layout }}
-            mode={inEditMode ? 'edit' : 'preview'}
-          />
-        </Box>
-      </MainPanel>
+      </Portal>
 
+      <Box mt='40px'>
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          openSidebar={() => {
+            builderPageDispatch({ type: 'OPEN_SIDEBAR', payload: undefined });
+          }}
+          closeSidebar={() => {
+            builderPageDispatch({ type: 'CLOSE_SIDEBAR', payload: undefined });
+          }}
+        >
+          <SidebarItem
+            icon={<RowIcon width={30} height={30} />}
+            elementType='ROW'
+          >
+            Row
+          </SidebarItem>
+          <SidebarItem
+            icon={<TextIcon width={30} height={30} />}
+            elementType='SHORT_TEXT'
+          >
+            Short Text
+          </SidebarItem>
+          <SidebarItem
+            icon={<HashTagIcon width={30} height={30} />}
+            elementType='NUMBER'
+          >
+            Number
+          </SidebarItem>
+          <SidebarItem
+            icon={<RadioBtnIcon width={30} height={30} />}
+            elementType='SINGLE_CHOICE'
+          >
+            Single Choice
+          </SidebarItem>
+          <SidebarItem
+            icon={<PressIcon width={30} height={30} />}
+            elementType='SUBMIT_BUTTON'
+          >
+            Submit Button
+          </SidebarItem>
+        </Sidebar>
+
+        <MainPanel isSidebarOpen={isSidebarOpen}>
+          <Box
+            display='flex'
+            gap={8}
+            justifyContent='center'
+            alignItems='center'
+            mb={5}
+            pt={5}
+          >
+            <Button
+              onClick={() => {
+                if (hasError) {
+                  builderDispatch(setAllElementTouched());
+                } else {
+                  updateForm(formId, { layout, elements }).then(console.log);
+                }
+              }}
+              leftIcon={<SaveIcon width={24} height={24} />}
+              isLoading={isLoading}
+            >
+              Save
+            </Button>
+            <FormControl
+              display='inline-flex'
+              w='fit-content'
+              alignItems='center'
+            >
+              <FormLabel htmlFor='form-preview-toggler' mb='0'>
+                Preview mode:
+              </FormLabel>
+              <Switch
+                id='form-preview-toggler'
+                size='lg'
+                isChecked={!inEditMode}
+                onChange={() =>
+                  builderPageDispatch(toggleFormPreviewMode(undefined))
+                }
+              />
+            </FormControl>
+          </Box>
+          <Box
+            rounded='md'
+            shadow='sm'
+            bg='white'
+            w='full'
+            maxW={800}
+            mx='auto'
+          >
+            <GenForm
+              data={{ elements, layout }}
+              mode={inEditMode ? 'edit' : 'preview'}
+            />
+          </Box>
+        </MainPanel>
+      </Box>
       <Inspector
         inspectedElementId={inspectedElementId}
         closeInspector={() => {

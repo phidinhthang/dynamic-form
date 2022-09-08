@@ -7,7 +7,7 @@ import { pushOne } from '../../utils/pushOne';
 import { fork } from '../../utils/fork';
 import { remove } from '../../utils/remove';
 import { createShortTextElement } from '../elements/ShortText/createShortTextElement';
-import { createEditBoxElement } from '../elements/EditBox/createEditBoxElement';
+import { createRowElement } from '../elements/Row/createRowElement';
 import { createSubmitButtonElement } from '../elements/SubmitButton/createSubmitButtonElement';
 import { BuilderCtx, BuilderElement, FieldElement } from '../elements/types';
 import { allFieldElementTypes } from '../elements/constants';
@@ -81,8 +81,8 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
             element = createNumberElement({ parentId });
           } else if (type === 'SINGLE_CHOICE') {
             element = createSingleChoiceElement({ parentId });
-          } else if (type === 'EDIT_BOX') {
-            element = createEditBoxElement({ parentId });
+          } else if (type === 'ROW') {
+            element = createRowElement({ parentId });
           } else {
             throw new Error('Element type not found.');
           }

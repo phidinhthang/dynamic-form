@@ -29,6 +29,7 @@ export const useUpdateForm = () => {
     try {
       const data = await updateFormApi(formId, updateFormBody);
       setState({ isLoading: false, data });
+      return data;
     } catch (error) {
       setState({ isLoading: false, error });
       return error as { errors: Error[] };

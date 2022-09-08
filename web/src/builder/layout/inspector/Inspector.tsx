@@ -23,7 +23,7 @@ import { changeElementData } from '../../builder/builderActions';
 import { useBuilderContext } from '../../builder/BuilderContext';
 import { clearInspectElementId } from '../../builderPage/builderPageActions';
 import { useBuilderPageContext } from '../../builderPage/BuilderPageContext';
-import { EditBoxInspector } from '../../elements/EditBox/EditBoxInspector';
+import { RowInspector } from '../../elements/Row/RowInspector';
 import { NumberInspector } from '../../elements/Number/NumberInspector';
 import { ShortTextInspector } from '../../elements/ShortText/ShortTextInspector';
 import { SingleChoiceInspector } from '../../elements/SingleChoice/SingleChoiceInspector';
@@ -90,7 +90,7 @@ export const Inspector: React.FC<InspectorProps> = ({
           ) : element.type === 'SINGLE_CHOICE' ? (
             <SingleChoiceInspector element={element} />
           ) : (
-            <EditBoxInspector />
+            <RowInspector />
           )}
         </Box>
       </Box>

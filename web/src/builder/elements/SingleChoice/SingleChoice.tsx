@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import {
   changeData,
+  changeValue,
   setSingleChoiceCheckedOptionId,
 } from '../../formData/formDataActions';
 import { useFormDataContext } from '../../formData/FormDataContext';
@@ -54,7 +55,7 @@ export const SingleChoice: React.FC<SingleChoiceProps> = ({ element }) => {
             }
             onCheck={() => {
               formDataDispatch(
-                changeData(element.id, option.value ?? (option.label as any))
+                changeValue(element.id, option.value ?? (option.label as any))
               );
               formDataDispatch(
                 setSingleChoiceCheckedOptionId(element.id, option.id)

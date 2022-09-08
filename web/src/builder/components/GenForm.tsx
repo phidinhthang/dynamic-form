@@ -4,13 +4,13 @@ import { BuilderCtx } from '../elements/types';
 import { DroppableItem } from '../layout/mainPanel/DroppableItem';
 import { SortableItem } from '../layout/mainPanel/SortableItem';
 import { EdittableWrapper } from './EditableWrapper';
-import { EditBox } from '../elements/EditBox/EditBox';
+import { Row } from '../elements/Row/Row';
 import { ShortText } from '../elements/ShortText/ShortText';
 import { EditShortText } from '../elements/ShortText/EditShortText';
 import { FormDataProvider } from '../formData/FormDataContext';
 import { Form } from '../elements/Form/Form';
 import { SubmitButton } from '../elements/SubmitButton/SubmitButton';
-import { EditEditBox } from '../elements/EditBox/EditEditBox';
+import { EditRow } from '../elements/Row/EditRow';
 import { TableRow } from '../table/types';
 import { Number } from '../elements/Number/Number';
 import { EditNumber } from '../elements/Number/EditNumber';
@@ -36,7 +36,7 @@ const recursiveRenderForm = (
             return (
               <SortableItem
                 accept={[
-                  'EDIT_BOX',
+                  'ROW',
                   'SHORT_TEXT',
                   'SUBMIT_BUTTON',
                   'NUMBER',
@@ -60,7 +60,7 @@ const recursiveRenderForm = (
             return (
               <SortableItem
                 accept={[
-                  'EDIT_BOX',
+                  'ROW',
                   'SHORT_TEXT',
                   'SUBMIT_BUTTON',
                   'NUMBER',
@@ -85,7 +85,7 @@ const recursiveRenderForm = (
             return (
               <SortableItem
                 accept={[
-                  'EDIT_BOX',
+                  'ROW',
                   'SHORT_TEXT',
                   'SUBMIT_BUTTON',
                   'NUMBER',
@@ -110,7 +110,7 @@ const recursiveRenderForm = (
             return (
               <SortableItem
                 accept={[
-                  'EDIT_BOX',
+                  'ROW',
                   'SHORT_TEXT',
                   'SUBMIT_BUTTON',
                   'NUMBER',
@@ -129,7 +129,7 @@ const recursiveRenderForm = (
             );
           }
           return <SingleChoice element={element} />;
-        } else if (element.type === 'EDIT_BOX') {
+        } else if (element.type === 'ROW') {
           const editBoxChildren = (
             <>
               {recursiveRenderForm(
@@ -141,7 +141,7 @@ const recursiveRenderForm = (
           return inEditMode ? (
             <SortableItem
               accept={[
-                'EDIT_BOX',
+                'ROW',
                 'SHORT_TEXT',
                 'SUBMIT_BUTTON',
                 'NUMBER',
@@ -149,18 +149,18 @@ const recursiveRenderForm = (
               ]}
               id={element.id}
               parentId={element.parentId}
-              type='EDIT_BOX'
+              type='ROW'
               index={index}
               key={element.id}
             >
               <EdittableWrapper element={element}>
-                <EditEditBox element={element} index={index}>
+                <EditRow element={element} index={index}>
                   {editBoxChildren}
-                </EditEditBox>
+                </EditRow>
               </EdittableWrapper>
             </SortableItem>
           ) : (
-            <EditBox element={element}>{editBoxChildren}</EditBox>
+            <Row element={element}>{editBoxChildren}</Row>
           );
         }
       })}
@@ -180,7 +180,7 @@ export const GenForm: React.FC<GenFormProps> = ({
     <Box px={4} w='full'>
       <DroppableItem
         accept={[
-          'EDIT_BOX',
+          'ROW',
           'SHORT_TEXT',
           'SUBMIT_BUTTON',
           'NUMBER',
