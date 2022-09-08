@@ -53,7 +53,14 @@ export const Inspector: React.FC<InspectorProps> = ({
   const element = elements[inspectedElementId];
   if (typeof element === 'undefined') return <></>;
 
-  const elementName = element.type === 'SHORT_TEXT' ? 'Short Text' : 'Edit Box';
+  const elementName =
+    element.type === 'SHORT_TEXT'
+      ? 'Short Text'
+      : element.type === 'NUMBER'
+      ? 'Number'
+      : element.type === 'SUBMIT_BUTTON'
+      ? 'Submit button'
+      : 'Edit Box';
 
   return (
     <Portal>
@@ -89,6 +96,8 @@ export const Inspector: React.FC<InspectorProps> = ({
             <NumberInspector element={element} />
           ) : element.type === 'SINGLE_CHOICE' ? (
             <SingleChoiceInspector element={element} />
+          ) : element.type === 'SUBMIT_BUTTON' ? (
+            <></>
           ) : (
             <RowInspector />
           )}

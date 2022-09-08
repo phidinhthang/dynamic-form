@@ -78,6 +78,15 @@ export const changelSingleChoiceOptionLabel = createAction(
       action(payload)
 );
 
+export const moveElementUp = createAction(
+  'MOVE_ELEMENT_UP',
+  (action) => (elementId: string) => action({ elementId })
+);
+export const moveElementDown = createAction(
+  'MOVE_ELEMENT_DOWN',
+  (action) => (elementId: string) => action({ elementId })
+);
+
 export const undoChanges = createAction('UNDO_CHANGES', (action) => action);
 export const redoChanges = createAction('REDO_CHANGES', (action) => action);
 
@@ -94,4 +103,6 @@ export type BuilderActions =
   | ReturnType<typeof setAllElementTouched>
   | ReturnType<typeof deleteSingleChoiceOption>
   | ReturnType<typeof addSingleChoiceOption>
-  | ReturnType<typeof changelSingleChoiceOptionLabel>;
+  | ReturnType<typeof changelSingleChoiceOptionLabel>
+  | ReturnType<typeof moveElementUp>
+  | ReturnType<typeof moveElementDown>;

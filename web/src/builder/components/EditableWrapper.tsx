@@ -7,13 +7,20 @@ import { setInspectElementId } from '../builderPage/builderPageActions';
 import { useBuilderPageContext } from '../builderPage/BuilderPageContext';
 import { BuilderElement } from '../elements/types';
 import { useSetSelectedElement } from '../builderPage/useSetSelectedElement';
+import {
+  ElementContextMenuProvider,
+  useElementContextMenuContext,
+} from './ElementContextMenu/ElementContextMenuContext';
+import { ElementContextMenu } from './ElementContextMenu/ElementContextMenu';
+import { useEventListener } from '../../shared-hooks/useEventListener';
+import { useOnClickOutside } from '../../shared-hooks/useOnClickOutside';
 
 interface EditableWrapperProps {
   children: React.ReactElement;
   element: BuilderElement;
 }
 
-export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
+const InnerEdittableWrapper: React.FC<EditableWrapperProps> = ({
   children,
   element,
 }) => {
@@ -22,15 +29,34 @@ export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
   const [, builderDispatch] = useBuilderContext();
   const isEditing = selectedElementId === element.id;
   const setSelectedElement = useSetSelectedElement();
+  const elementRef = React.useRef<HTMLDivElement>(null);
+  const { setContextMenu } = useElementContextMenuContext();
+
+  useEventListener(
+    'contextmenu',
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setContextMenu({
+        elementId: element.id,
+        left: e.clientX,
+        top: e.clientY,
+        rightHandSide: false,
+      });
+      setSelectedElement(element.id);
+    },
+    elementRef
+  );
 
   return (
     <Box
+      ref={elementRef}
       border='2px solid'
       borderColor={isEditing && inEditMode ? 'blue.500' : 'transparent'}
       rounded='md'
       style={{ cursor: 'move' }}
       position='relative'
-      onMouseDown={(e) => {
+      onClick={(e) => {
         e.stopPropagation();
         setSelectedElement(element.id);
       }}
@@ -66,6 +92,20 @@ export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
           />
         </Box>
       )}
+      <ElementContextMenu />
     </Box>
+  );
+};
+
+export const EdittableWrapper: React.FC<EditableWrapperProps> = ({
+  children,
+  element,
+}) => {
+  return (
+    <ElementContextMenuProvider>
+      <InnerEdittableWrapper element={element}>
+        {children}
+      </InnerEdittableWrapper>
+    </ElementContextMenuProvider>
   );
 };

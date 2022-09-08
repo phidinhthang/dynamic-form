@@ -246,6 +246,54 @@ export const builderReducer = (state: BuilderCtx, action: BuilderActions) => {
           break;
         }
 
+        case 'MOVE_ELEMENT_UP': {
+          const element = draftState.elements[action.payload.elementId];
+          if (!element) {
+            return;
+          }
+          let elementSiblings: string[];
+          if (element.parentId === 'root') {
+            elementSiblings = draftState.layout;
+          } else {
+            elementSiblings =
+              draftState.elements[element.parentId].children || [];
+          }
+          const elementIndex = elementSiblings.findIndex(
+            (elementId) => elementId === element.id
+          );
+          if (elementIndex > 0) {
+            const temp = elementSiblings[elementIndex];
+            elementSiblings[elementIndex] = elementSiblings[elementIndex - 1];
+            elementSiblings[elementIndex - 1] = temp;
+          }
+
+          break;
+        }
+
+        case 'MOVE_ELEMENT_DOWN': {
+          const element = draftState.elements[action.payload.elementId];
+          if (!element) {
+            return;
+          }
+          let elementSiblings: string[];
+          if (element.parentId === 'root') {
+            elementSiblings = draftState.layout;
+          } else {
+            elementSiblings =
+              draftState.elements[element.parentId].children || [];
+          }
+          const elementIndex = elementSiblings.findIndex(
+            (elementId) => elementId === element.id
+          );
+          if (elementIndex < elementSiblings.length - 1) {
+            const temp = elementSiblings[elementIndex];
+            elementSiblings[elementIndex] = elementSiblings[elementIndex + 1];
+            elementSiblings[elementIndex + 1] = temp;
+          }
+
+          break;
+        }
+
         case 'UNDO_CHANGES': {
           const undo = timeline[currentVersion]?.undo;
           if (!undo) return;

@@ -301,6 +301,7 @@ export const BuilderPage = () => {
           >
             <Button
               onClick={() => {
+                console.log('form ', layout, 'elements ', elements);
                 if (hasError) {
                   builderDispatch(setAllElementTouched());
                 } else {
